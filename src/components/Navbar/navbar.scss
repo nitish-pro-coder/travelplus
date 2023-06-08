@@ -1,0 +1,220 @@
+:root{
+    --PrimaryColor: hsl(229, 62%, 46%);
+    --HoverColor: hsl(0, 0%, 0%); 
+    --whiteColor: hsl(0, 0%, 100%);
+    --blackColor: hsl(0, 0%, 18%);
+    --textColor: hsl(240, 75%, 42%);
+    --whiteColorDeam: hsl(0, 0%, 93%);
+    --greyBg: hsl(0, 0%, 96%);
+    --greyText: rgb(190, 190, 190);
+    --inputColor: hsl(330, 12%, 97%);
+    --boxShadow:  box-shadow: 0 2px 8px 2px rgba(178, 178, 178, 0.189);
+}
+
+.header{
+    position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: transparent;
+    width: 100%;
+    // height: var(--headerHeight);
+    z-index: 1000;
+    padding: 1rem;
+
+    .logo{
+        color: var(--whiteColor);
+        font-weight: 500;
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
+
+        .icon{
+         font-size: 25px;
+         color: rgb(41, 74, 219);
+         transform: translateY(5px);
+        }
+    }
+    
+    @media screen and (max-width:768px){
+        .navBar{
+            background: var(--greyBg);
+            position: absolute;
+            height: max-content;
+            width: 100%;
+            padding: 1rem;
+            top: 0;
+            left: -500%;
+            z-index: 2000;
+            box-shadow: 0 2px 4px rgba(255, 255, 255, 0.904);
+            transition: .5s ease-in-out;
+
+            .navLists{
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                width: 100%;
+                align-items: center;
+                margin: auto;
+                padding: .5rem 0; //on the wide screen padding should be :0 1rem
+                .navItem{
+                   padding: .5rem 0; //on the wide screen padding should be :0 1rem
+                   
+                   .navLink{
+                    color: var(--textColor);
+                    font-size: .9rem;
+                    font-weight: 600;
+                    &:hover{
+                        color: var(--PrimaryColor);
+                    }
+                   } 
+                }
+
+                .headerBtns{
+                    flex-direction: column;
+
+                    .btn{
+                        margin-top: 1rem; 
+    
+                        a{
+                            font-weight: 600;
+                        }
+
+                        &:hover{
+                            a{
+                                color: var(--whiteColor);
+                            }
+                        }
+                    }
+
+                    .loginBtn{
+                        background: none;
+                        border: 1px solid var(--PrimaryColor);
+                        color: var(--PrimaryColor);
+                        a{
+                            color: var(--PrimaryColor);
+                        }
+                        &:hover{
+                            background: var(--HoverColor);
+                            a{
+                                color: var(--whiteColor);
+                            }
+                        }
+                    }
+                }
+
+               
+        
+            }
+
+            .closeNavbar{
+                position: absolute;
+                top: 1rem;
+                right: 1.5rem;
+                color: var(--PrimaryColor);
+                &:hover .icon{
+                    color: var(--SecondaryColor);
+                }
+            }
+        }
+
+        .activeNavbar{
+            left: 0%;
+        }
+    }
+
+    .toggleNavbar{
+        .icon{
+            font-size: 25px;
+          color: var(--whiteColor);
+        }
+        &:hover.icon{
+            color: var(--SecondaryColor);
+            
+        }
+    }
+
+  
+}
+
+.activeHeader{
+    background: var(--textColor);
+    box-shadow: var(--boxShadow);
+}
+
+@media screen and (min-width: 769px){
+    .toggleNavbar, .closeNavbar{
+        display: none;
+    }
+
+    .header{
+        padding: 1.5rem 2rem;
+        .navBar{
+            .navLists{
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-direction: row;
+                // padding: 0 1rem;
+                .navItem{
+                    
+                    .navLink{
+                        color: var(--whiteColor);
+                        padding: 0 .45rem;
+                        font-size: .9rem;
+                        font-weight: 400;
+                        &:hover{
+                            color: var(--PrimaryColor);
+                        }
+    
+                    .headerNumber{
+                        color: var(--primaryHover);
+                    }
+                   } 
+                }
+    
+                .btn{
+                    margin-left: 1rem; 
+                    a{
+                        color: var(--whiteColor);
+                        font-weight: 500;
+                    }
+                }
+
+                .loginBtn{
+                    background:none;
+                    border: 1px solid var(--PrimaryColor);
+                    
+                    &:hover{
+                        background: var(--PrimaryColor);
+                        a{
+                            color: var(--whiteColor);
+                        }
+                    }
+                }
+        
+            }
+        }
+    }
+}
+
+
+@media screen and (min-width: 960px){
+    .header{
+        .navBar{
+            .navLists{
+                .navItem{
+                   padding: 0 .7rem;
+                }
+            }
+        }
+    }
+  
+}
+
+@media screen and (min-width: 1024px){
+    .header{
+        padding: 1rem 8.5rem;
+    }
+}
+
