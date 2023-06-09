@@ -11,6 +11,7 @@ import DescriptionIcon from '@mui/icons-material/Description';
 import Button from '@mui/material/Button';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
 import { saveAs as fileDownload } from 'file-saver';
+import PersonIcon from '@mui/icons-material/Person';
 import Navbar from '../components/Navbar/Navbar';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -24,7 +25,9 @@ export default function Bookings() {
   const [searchTerm, setSearchTerm] = React.useState('');
   const isMobile = useMediaQuery('(max-width:600px)');
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
-  const [isInclusions, setInclusions]  = React.useState(false);
+  const [isInclusions, setInclusions]  = React.useState(true);
+  const [istraveller,setTraveller] = React.useState(true);
+  const [iscreation,setCreation] = React.useState(true);
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -37,6 +40,12 @@ export default function Bookings() {
   };
   const handleInclusions =()=>{
     setInclusions(!isInclusions)
+  }
+  const handleTraveller = () =>{
+    setTraveller(!istraveller)
+  }
+  const handleCreation = ()=>{
+   setCreation(!iscreation)
   }
   const handleDownload = () => {
     fetch('../Assets/dummy.pdf')
@@ -160,7 +169,6 @@ export default function Bookings() {
               <Typography>
                 <p className="mt-4 fw-bold">BOOKINGS</p>
               </Typography>
-
               <Card className="mt-4">
                 <CardContent>
                   <TextField
@@ -204,7 +212,7 @@ export default function Bookings() {
                       <div className="text-center mt-2">No Upcoming bookings.</div>
                     </TabPanel>
                   </TabContext>
-                </CardContent>
+                 </CardContent> 
               </Card>
             </CardContent>
           </Card>
@@ -220,7 +228,7 @@ export default function Bookings() {
     </Typography>
       </div>
     <div className='col-4 mt-3'>
-    <IconButton><DownloadIcon/><bold>Download</bold></IconButton>
+    <IconButton><DownloadIcon/></IconButton>
     </div>
     </div>
     </div>
@@ -321,13 +329,93 @@ export default function Bookings() {
       <RestaurantIcon className='ms-3' />
     </ListItemIcon>
   </div>
-  <div className="d-inline">
+  <div className="d-inline mb-3">
     <ListItemText primary="Breakfast" primaryTypographyProps={{ style: { fontWeight:'normal' } }} />
   </div>
   </div>
       </Collapse>
-      <Divider/>
+      <div className='row'>
+        <div className='col-4 mb-4'>
+      <ListItemButton onClick={handleTraveller} >
+        <ListItemText primary="Traveller Details" primaryTypographyProps={{ style: { fontWeight: 'bold' } }} />
+        {istraveller ? <ExpandLess /> : <ExpandMore />}
+      </ListItemButton>
       </div>
+      </div>
+      <Collapse in={istraveller} timeout="auto" unmountOnExit>
+    <div className="d-flex align-items-center">
+      <div className="d-inline ">
+    <ListItemIcon >
+      <PersonIcon className='ms-2' />
+    </ListItemIcon>
+     </div>
+  <div className="d-inline mb-4">
+    <ListItemText primary="Nittin.G" primaryTypographyProps={{ style: { fontWeight:'normal' } }} secondary = "nittinjr29@gmail.com" />
+  </div>
+  </div>
+  </Collapse>
+  </div>
+  <div className='row ms-4'>
+    <div className='col-6'>
+      <Typography fontWeight='Bolder'> Room Charges </Typography>
+    </div>
+     <div className='col-6'>
+      <Typography fontWeight = 'Lighter'>7000</Typography>
+     </div>
+  </div>
+  <div className='row ms-3'>
+    <div className='col-6 mt-2'>
+      <Typography fontWeight='Bolder'>Inclusion cost</Typography>
+    </div>
+     <div className='col-6 mt-2'>
+      <Typography fontWeight = 'Lighter'>0.0</Typography>
+     </div>
+  </div>
+  <div className='row ms-3'>
+    <div className='col-6 mt-2'>
+      <Typography fontWeight='Bolder'> GST </Typography>
+    </div>
+     <div className='col-6 mt-2'>
+      <Typography fontWeight = 'Lighter'>1,764.0</Typography>
+     </div>
+  </div>
+  <Divider className='mt-4'/>
+  <div className='row ms-3'>
+    <div className='col-6 mt-4'>
+      <Typography fontWeight='Bolder'> Total Booking Amount </Typography>
+    </div>
+     <div className='col-6 mt-4'>
+      <Typography fontWeight = 'Lighter'>16,464.0</Typography>
+     </div>
+  </div>
+  <Divider className='mt-4'/>
+  <div className='row ms-2'>
+  <div className='col-4'>
+  <ListItemButton onClick={handleCreation} >
+        <ListItemText primary="Creation Details" primaryTypographyProps={{ style: { fontWeight: 'bold' } }} />
+        {isInclusions ? <ExpandLess /> : <ExpandMore />}
+    </ListItemButton>
+  </div>
+  </div>
+    <Collapse in={iscreation} timeout="auto" unmountOnExit>
+      <div className='row ms-2'>
+        <div className = 'col-6'>
+          <p> Created by</p>
+        </div>
+        <div className = 'col-6'>
+         <p> Internal user</p>
+        </div>
+      </div>
+      <div className='row ms-2'>
+        <div className = 'col-6'>
+          <p> Created on</p>
+        </div>
+        <div className = 'col-6'>
+         <p> 03 Jun'23| 02:42 PM</p>
+        </div>
+      </div>
+    
+  </Collapse>
     </List>
   </Box>
 </Drawer>

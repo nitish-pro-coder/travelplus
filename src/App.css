@@ -10,6 +10,15 @@
 .css-1aquho2-MuiTabs-indicator{
     background: #7862dc !important;
 }
+.badge{
+    color: rgb(14, 40, 106);
+    font-size: 12px;
+    padding: 6px 8px;
+    background-color: rgba(14, 40, 106, 0.1);
+    display: block;
+    border-radius: 12px;
+    
+}
 
 :root{
     --PrimaryColor: #7862dc;
