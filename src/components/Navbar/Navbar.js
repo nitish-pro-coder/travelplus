@@ -104,8 +104,8 @@ const Navbar = () => {
                 <Link to='/payment' className='navLink'>Payment & Invoices</Link>
               </li>
               
-              <div className="headerBtns flex">
-              <button className="btn loginBtn" onClick={toggleDrawer('right', true)}>
+              <div className="headerBtns flex loginBtn">
+              <button className="btn " onClick={toggleDrawer('right', true)}>
                <SlWallet classname="icon" fill="white"/>
               </button>
               <Drawer
@@ -124,6 +124,7 @@ const Navbar = () => {
         <Box sx={{ p: 2 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
   <h3>Balance amount</h3>
+  
   
   <Button variant='contained'  startIcon={<AddIcon />} sx={{ marginLeft: 'auto',backgroundColor:'#7862dc'}}>
     Add Balance
@@ -214,8 +215,8 @@ const Navbar = () => {
 </Box>
 </Drawer>
 <div className="loginBtn">
-<Link sx={{color:"#fff"}} to="/settings">
-      <IconButton color="#fff">
+<Link  to="/settings">
+      <IconButton sx={{color:"#fff"}} >
         <SettingsIcon />
       </IconButton>
     </Link>

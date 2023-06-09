@@ -11,6 +11,7 @@ import Bookings from './pages/Bookings';
 import Popular from './pages/Popular/Popular';
 import SignInSide from './pages/LoginPage';
 import FormDialog from './pages/gstmangement';
+// import Login from './pages/Login';
 
 const App = () => {
   function HomeComponent(){
@@ -31,7 +32,9 @@ const App = () => {
         <Route path='/Payment' element={<Payment/>}/>
         <Route path='/Settings' element={<Settings/>}/>
         <Route path='/gstmanagement' element={<FormDialog/>}></Route>
-
+        <Route path='/Insights' element={<Insight/>}/>
+        {/* <Route  path='/Login' element={<Login/>}/> */}
+  
         
       </Routes>
     </Router>

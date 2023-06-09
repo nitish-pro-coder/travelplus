@@ -34,6 +34,7 @@ import {
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
+import { Carousel as Clsreact } from 'react-material-ui-carousel';
 
 
 
@@ -132,18 +133,18 @@ import CloseIcon from '@mui/icons-material/Close';
   };
   const carouselItems = [
     {
-      title: 'First Slide',
-      description: 'Description for first slide',
+      title: 'Deluxe Room',
+      description: '₹1,935.0',
+      description1: 'Room Only',
      
     },
     {
-      title: 'Second Slide',
-      description: 'Description for second slide',
-      imageUrl: 'https://example.com/image2.jpg',
+      title: 'Executive Room',
+      description: '₹2,128.0',
     },
     {
-      title: 'Third Slide',
-      description: 'Description for third slide',
+      title: 'Family Room',
+      description: '₹2,707.0',
       
     },
   ];
@@ -737,7 +738,33 @@ import CloseIcon from '@mui/icons-material/Close';
 
      <div className='row justify-content-center'>
       <div className='col-6'>
-      
+        <Card>
+          <CardContent>
+         
+        
+     
+      <Carousel
+      showThumbs={false}
+      infiniteLoop
+      swipeable={false}
+      showIndicators={false}
+      autoFocus={true}
+       
+    >
+       {carouselItems.map((item, index) => (
+        <>
+     <Typography variant="h5" component="div" sx={{background:"rgba(216, 216, 216, 0.2)",p:3}}>
+          {item.title}
+        </Typography>
+        <Typography className='mt-3' variant="body1">
+         {item.description}
+        </Typography>
+       
+        </>
+       ))}
+    </Carousel>
+    </CardContent>
+    </Card>
             </div>
             </div>
 

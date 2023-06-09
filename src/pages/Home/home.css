@@ -1,5 +1,5 @@
 :root {
-  --PrimaryColor: hsla(192, 76%, 48%, 0.986);
+  --PrimaryColor: #7862dc;
   /* --HoverColor: hsl(0, 0%, 3%); */
   --whiteColor: hsl(0, 0%, 100%);
   --blackColor: hsl(0, 0%, 18%);
@@ -54,7 +54,7 @@
 .btn{
   color: #fff;
 }
-datePickerOverlay {
+.datePickerOverlay {
   position: absolute;
   z-index: 999;
   background-color: #ffffff;
