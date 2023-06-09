@@ -3,14 +3,20 @@ import { Card, CardContent, Container, Grid, Tab, Tabs, TextField, InputAdornmen
 import { DataGrid } from '@mui/x-data-grid';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
+import Collapse from '@mui/material/Collapse';
 import TabPanel from '@mui/lab/TabPanel';
 import SearchIcon from '@mui/icons-material/Search';
 import DownloadIcon from '@mui/icons-material/Download';
 import DescriptionIcon from '@mui/icons-material/Description';
 import Button from '@mui/material/Button';
+import RestaurantIcon from '@mui/icons-material/Restaurant';
 import { saveAs as fileDownload } from 'file-saver';
 import Navbar from '../components/Navbar/Navbar';
+import ExpandLess from '@mui/icons-material/ExpandLess';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ExpandMore from '@mui/icons-material/ExpandMore';
 import { pink, purple } from '@mui/material/colors';
+import ListItemButton from '@mui/material/ListItemButton';
 import { useEffect } from 'react';
 
 export default function Bookings() {
@@ -18,7 +24,7 @@ export default function Bookings() {
   const [searchTerm, setSearchTerm] = React.useState('');
   const isMobile = useMediaQuery('(max-width:600px)');
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
-
+  const [isInclusions, setInclusions]  = React.useState(false);
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -29,7 +35,9 @@ export default function Bookings() {
    const handleDrawerOpen = () => {
     setIsDrawerOpen(true);
   };
-  
+  const handleInclusions =()=>{
+    setInclusions(!isInclusions)
+  }
   const handleDownload = () => {
     fetch('../Assets/dummy.pdf')
       .then((response) => response.blob())
@@ -146,7 +154,7 @@ export default function Bookings() {
     <>
       <Navbar />
       <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-        <Container maxWidth="lg" className="mb-4 " sx={{ paddingTop: '80px' }}>
+        <Container maxWidth="lg" className="mb-4 mt-4" sx={{ paddingTop: '80px' }}>
           <Card className="mt-2 " style={{ boxShadow: 'rgb(207 202 202) 0px 0px 10px', border: '1px solid #1976d2' }}>
             <CardContent>
               <Typography>
@@ -207,12 +215,12 @@ export default function Bookings() {
     <div className = "container">
     <div className='row'>
       <div className='col-8'>
-    <Typography variant="h6" sx={{ p: 2 }}>
+    <Typography variant="h6" fontWeight='Bold' sx={{ p: 2 }}>
       Booking Details
     </Typography>
       </div>
     <div className='col-4 mt-3'>
-    <IconButton><DownloadIcon/></IconButton>
+    <IconButton><DownloadIcon/><bold>Download</bold></IconButton>
     </div>
     </div>
     </div>
@@ -223,52 +231,106 @@ export default function Bookings() {
       <ListItem>
       <ListItemText
     primary=" City"
+    primaryTypographyProps={{ style: { fontWeight: 'bold' } }}
     secondary= " Chennai"/>
       </ListItem>
       </div>
       <div className = 'col-6'>
       <ListItem >
-        <ListItemText primary="Traveler(s)" secondary="John Doe" />
+        <ListItemText primary="Traveler(s)" 
+         primaryTypographyProps={{ style: { fontWeight: 'bold' } }}
+         secondary="John Doe" />
       </ListItem>
       </div>
       </div>
       <div className='row ms-3'>
        <div className='col-6'>
       <ListItem>
-        <ListItemText  primary="2023-06-01" secondary="Check-in" />
+        <ListItemText  primary="2023-06-01"
+         primaryTypographyProps={{ style: { fontWeight: 'bold' } }}
+         secondary="Check-in" />
       </ListItem>
       </div>
       <div className='col-6'>
       <ListItem>
-        <ListItemText  primary ="2023-06-07" secondary="Check-out" />
+        <ListItemText  primary ="2023-06-07" 
+         primaryTypographyProps={{ style: { fontWeight: 'bold' } }}
+         secondary="Check-out" />
       </ListItem>
       </div>
       </div>
       <div className='row ms-3'>
         <div className = 'col-6'>
       <ListItem>
-        <ListItemText  primary ="T Nagar" secondary="Location" />
+        <ListItemText  primary ="T Nagar" 
+         primaryTypographyProps={{ style: { fontWeight: 'bold' } }}
+        secondary="Location" />
       </ListItem>
       </div>
       <div className = 'col-6'>
       <ListItem>
-        <ListItemText primary="Destination" secondary="Paris" />
+        <ListItemText primary="Destination" 
+         primaryTypographyProps={{ style: { fontWeight: 'bold' } }}
+        secondary="Paris" />
       </ListItem>
       </div>
       </div>
       <div className = 'row ms-3'>
       <div className='col-6'>
       <ListItem >
-        <ListItemText  primary ="NA" secondary="Trip ID"/>
+        <ListItemText  primary ="NA" 
+         primaryTypographyProps={{ style: { fontWeight: 'bold' } }}
+        secondary="Trip ID"/>
+      </ListItem>
+      </div>
+      <div className='col-6'>
+      <ListItem>
+        <ListItemText primary ="Payment mode" 
+         primaryTypographyProps={{ style: { fontWeight: 'bold' } }}
+         secondary="Prepaid"/>
       </ListItem>
       </div>
       </div>
+      <div className = 'row ms-3'>
+      <div className='col-6'>
+      <ListItem >
+        <ListItemText  primary ="Hotel Name" 
+         primaryTypographyProps={{ style: { fontWeight: 'bold' } }}
+        secondary="faab Hotel"/>
+      </ListItem>
+      </div>
+      <div className='col-6'>
+      <ListItem>
+        <ListItemText primary ="Number of rooms" 
+         primaryTypographyProps={{ style: { fontWeight: 'bold' } }}
+        secondary="1"/>
+      </ListItem>
+      </div>
+      <div className='row'>
+        <div className='col-4'>
+      <ListItemButton onClick={handleInclusions} >
+        <ListItemText primary="Inclusions" primaryTypographyProps={{ style: { fontWeight: 'bold' } }} />
+        {isInclusions ? <ExpandLess /> : <ExpandMore />}
+      </ListItemButton>
+      </div>
+      </div>
+      <Collapse in={isInclusions} timeout="auto" unmountOnExit>
+    <div className="d-flex align-items-center">
+      <div className="d-inline ">
+    <ListItemIcon >
+      <RestaurantIcon className='ms-3' />
+    </ListItemIcon>
+  </div>
+  <div className="d-inline">
+    <ListItemText primary="Breakfast" primaryTypographyProps={{ style: { fontWeight:'normal' } }} />
+  </div>
+  </div>
+      </Collapse>
       <Divider/>
-
+      </div>
     </List>
   </Box>
 </Drawer>
-
     </>
   );
 }

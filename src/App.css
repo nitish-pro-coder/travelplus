@@ -7,6 +7,9 @@
     font-family: 'Poppins', sans-serif;
     /* transition: .3s ease; */
 }
+.css-1aquho2-MuiTabs-indicator{
+    background: #7862dc !important;
+}
 
 :root{
     --PrimaryColor: #7862dc;
