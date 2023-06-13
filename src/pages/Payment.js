@@ -12,7 +12,7 @@ import InputAdornment from "@mui/material/InputAdornment";
 import SearchIcon from '@mui/icons-material/Search';
 import { Table, TableHead, TableBody, TableRow, TableCell} from '@mui/material';
 import Chip from '@mui/material/Chip';
-import { Dialog, DialogTitle, DialogContent, Button } from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, Button,Box} from '@mui/material';
 import {useState} from 'react';
 import { DateRange } from 'react-date-range';
 import 'react-date-range/dist/styles.css'; // Import the styles for the date picker
@@ -102,8 +102,8 @@ export default function Payment() {
   return (
     <>
     <Navbar/>
-    <Container className='mb-4 innercontainer'>
-        <Grid container  spacing={4}>
+    <Box className="d-flex justify-content-center">
+    <Container maxWidth="lg" className="mb-4 mt-4" sx={{ paddingTop: '80px' }}>
   <Card className='mt-2 ' style={{boxShadow: "rgb(207 202 202) 0px 0px 10px",border:"1px solid #1976d2"}}>
  
     <CardContent>
@@ -422,8 +422,8 @@ export default function Payment() {
     
     {/* </CardContent>
   </Card> */}
-  </Grid>
-</Container>
+  </Container>
+</Box>
 </>
 
   )

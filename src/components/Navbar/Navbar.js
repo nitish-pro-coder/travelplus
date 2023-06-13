@@ -4,7 +4,7 @@ import {AiFillCloseCircle} from 'react-icons/ai'
 import {TbGridDots} from 'react-icons/tb'
 import {SiYourtraveldottv} from 'react-icons/si'
 import {SlWallet } from 'react-icons/sl'
-import { Drawer, IconButton, TextField, Select, MenuItem, Table, TableHead, TableBody, TableRow, TableCell, Typography, InputAdornment } from '@mui/material';
+import { Drawer, IconButton, TextField, Select, MenuItem, Table, TableHead, TableBody, TableRow, TableCell, Typography, InputAdornment, Divider } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import AddIcon from '@mui/icons-material/Add';
 import SearchIcon from '@mui/icons-material/Search';
@@ -109,111 +109,102 @@ const Navbar = () => {
                <SlWallet classname="icon" fill="white"/>
               </button>
               <Drawer
-        anchor={isMobile ? 'bottom' : 'right'}
-        open={state['right']}
-        onClose={toggleDrawer('right', false)}
-        PaperProps={{ style: { width: 1000 } }}
-      >
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 2,backgroundColor:'#7862dc'}}>
-          <Typography variant="h6" color={"#fff"}>Wallet</Typography>
-          <IconButton onClick={toggleDrawer('right', false)}>
-            <CloseIcon htmlColor={'#fff'} />
-          </IconButton>
-        </Box>
+  anchor={isMobile ? 'bottom' : 'right'}
+  open={state['right']}
+  onClose={toggleDrawer('right', false)}
+  PaperProps={{ style: { width: 1000 } }}
+>
+  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 2, backgroundColor: '#7862dc' }}>
+    <Typography variant="h6" className="text-white">Wallet</Typography>
+    <IconButton onClick={toggleDrawer('right', false)}>
+      <CloseIcon htmlColor={'#fff'} />
+    </IconButton>
+  </Box>
 
-        <Box sx={{ p: 2 }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-  <h3>Balance amount</h3>
-  
-  
-  <Button variant='contained'  startIcon={<AddIcon />} sx={{ marginLeft: 'auto',backgroundColor:'#7862dc'}}>
-    Add Balance
-  </Button>
-  
+  <Box sx={{ p: 2 }}>
+    <div className="d-flex justify-content-between align-items-center mt-3">
+      <h3 className="mt-3">Balance amount</h3>
+      <Button variant="contained" startIcon={<AddIcon />} className="ms-auto" style={{ backgroundColor: '#7862dc' }}>
+        Add Balance
+      </Button>
+    </div>
+
+    <h5 className="mt-1">₹ 0.00</h5>
+
+    <Divider />
+
+    <div className="mt-4 d-flex flex-wrap gap-2 mb-2 w-75">
+  <TextField
+    label="Search"
+    value={searchTerm}
+    onChange={handleSearchChange}
+    variant="outlined"
+    fullWidth={isMobile}
+    className="flex-grow-1" // Set TextField width to grow and occupy remaining space
+    InputProps={{
+      startAdornment: (
+        <InputAdornment position="start">
+          <SearchIcon />
+        </InputAdornment>
+      ),
+    }}
+  />
+
+  <Select
+    // value={typeFilter}
+    // onChange={handleTypeFilterChange}
+    variant="outlined"
+    className="w-25" // Set Select width to not grow
+  >
+    <MenuItem value="Jun'23">Jun'23</MenuItem>
+    <MenuItem value="May'23">May'23</MenuItem>
+    <MenuItem value="April'23">April'23</MenuItem>
+  </Select>
+
+  <Select
+    // value={typeFilter}
+    // onChange={handleTypeFilterChange}
+    variant="outlined"
+    className="w-25" // Set Select width to not grow
+  >
+    <MenuItem value="Credit">Credit</MenuItem>
+    <MenuItem value="Debit">Debit</MenuItem>
+  </Select>
 </div>
-<h5>₹ 0.00</h5>
 
 
-          <div style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
-          <TextField
-  label="Search"
-  value={searchTerm}
-  onChange={handleSearchChange}
-  variant="outlined"
-  fullWidth={isMobile}
-  InputProps={{
-    startAdornment: (
-      <InputAdornment position="start">
-        <SearchIcon />
-      </InputAdornment>
-    ),
-    sx: {
-      borderRadius: '20px',
-      '& .MuiOutlinedInput-notchedOutline': {
-        borderColor: '#000000',
-      },
-    },
-  }}
-/>
-           
 
-            <Select
-//   value={typeFilter}
-//   onChange={handleTypeFilterChange}
-  variant="outlined"
-  sx={{
-    width: isMobile ? '50px' : '100px',
-    borderRadius: '30px',
-    '& .MuiOutlinedInput-root': {
-      borderRadius: '30px',
-    },
-  }}
->
-  <MenuItem value="Jun'23">Jun'23</MenuItem>
-  <MenuItem value="May'23">May'23</MenuItem>
-  <MenuItem value="April'23">April'23</MenuItem>
-</Select>
-
-
-<Select
-//   value={typeFilter}
-//   onChange={handleTypeFilterChange}
-  variant="outlined"
-  sx={{
-    width: isMobile ? '50px' : '100px',
-    borderRadius: '30px',
-    '& .MuiOutlinedInput-root': {
-      borderRadius: '30px',
-    },
-  }}
->
-  <MenuItem value="Credit">Credit</MenuItem>
-  <MenuItem value="Debit">Debit</MenuItem>
-</Select>
-          </div>
-
-          <Table>
-  <TableHead>
-    <TableRow>
-      <TableCell style={{ backgroundColor: '#f5f5f5', fontWeight: 'bold' }}>ID</TableCell>
-      <TableCell style={{ backgroundColor: '#f5f5f5', fontWeight: 'bold' }}>Name</TableCell>
-      <TableCell style={{ backgroundColor: '#f5f5f5', fontWeight: 'bold' }}>Status</TableCell>
-      <TableCell style={{ backgroundColor: '#f5f5f5', fontWeight: 'bold' }}>Type</TableCell>
-    </TableRow>
-  </TableHead>
-  <TableBody>
-    {transactions.map((row) => (
-      <TableRow key={row.id}>
-        <TableCell>{row.id}</TableCell>
-        <TableCell>{row.name}</TableCell>
-        <TableCell>{row.status}</TableCell>
-        <TableCell>{row.type}</TableCell>
-      </TableRow>
-    ))}
-  </TableBody>
-</Table>
-</Box>
+    <Table>
+      <TableHead>
+        <TableRow>
+          <TableCell style={{ backgroundColor: '#f5f5f5', fontWeight: 'bold' }}>ID</TableCell>
+          <TableCell style={{ backgroundColor: '#f5f5f5', fontWeight: 'bold' }}>Name</TableCell>
+          <TableCell style={{ backgroundColor: '#f5f5f5', fontWeight: 'bold' }}>Status</TableCell>
+          <TableCell style={{ backgroundColor: '#f5f5f5', fontWeight: 'bold' }}>Type</TableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {transactions.length === 0 ? (
+          <TableRow>
+            <TableCell colSpan={4} className="text-center">
+              <img  alt="No data available" className="img-fluid" />
+            </TableCell>
+          </TableRow>
+        ) : (
+          transactions.map((row) => (
+            <TableRow key={row.id}>
+              <TableCell>{row.id}</TableCell>
+              <TableCell>{row.name}</TableCell>
+              <TableCell>{row.status}</TableCell>
+              <TableCell>{row.type}</TableCell>
+            </TableRow>
+          ))
+        )}
+      </TableBody>
+    </Table>
+  </Box>
 </Drawer>
+
 <div className="loginBtn">
 <Link  to="/settings">
       <IconButton sx={{color:"#fff"}} >

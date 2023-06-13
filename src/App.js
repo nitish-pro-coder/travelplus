@@ -11,6 +11,7 @@ import Bookings from './pages/Bookings';
 import Popular from './pages/Popular/Popular';
 import SignInSide from './pages/LoginPage';
 import FormDialog from './pages/gstmangement';
+import Login from './pages/login/login';
 // import Login from './pages/Login';
 
 const App = () => {
@@ -28,7 +29,7 @@ const App = () => {
       <Routes>
         <Route path='/' element={<HomeComponent/>}/>
         <Route path='/Bookings' element={<Bookings/>}/>
-        <Route path='/login' element={<SignInSide/>}></Route>
+        <Route path='/login' element={<Login/>}></Route>
         <Route path='/Payment' element={<Payment/>}/>
         <Route path='/Settings' element={<Settings/>}/>
         <Route path='/gstmanagement' element={<FormDialog/>}></Route>

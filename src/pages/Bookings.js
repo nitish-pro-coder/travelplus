@@ -162,7 +162,7 @@ export default function Bookings() {
   return (
     <>
       <Navbar />
-      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+      <Box className="d-flex justify-content-center">
         <Container maxWidth="lg" className="mb-4 mt-4" sx={{ paddingTop: '80px' }}>
           <Card className="mt-2 " style={{ boxShadow: 'rgb(207 202 202) 0px 0px 10px', border: '1px solid #1976d2' }}>
             <CardContent>

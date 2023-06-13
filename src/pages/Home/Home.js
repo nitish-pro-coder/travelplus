@@ -27,19 +27,14 @@ import {
   Toolbar,
   IconButton,
   Drawer,
-  List,
-  ListItem,
-  ListItemText,
   Typography
 } from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
-import { Carousel as Clsreact } from 'react-material-ui-carousel';
-
-
+import { Dialog, DialogTitle} from '@mui/material';
 
 
  const Home = () => {
+  const [open, setOpen] = React.useState(false);
   function valuetext(value) {
     return value;
   }
@@ -60,6 +55,7 @@ import { Carousel as Clsreact } from 'react-material-ui-carousel';
     const [recentsearch,setrecentsearch]=React.useState(true);
     const [searchrender,setsearchrender]=React.useState(false);
     const [loadingsearch,setloadingsearch]=React.useState(false);
+    const [hotelapilist,sethotelapilist]=React.useState([])
 
     const handleToggleDateRangePicker = () => {
       setShowDateRangePicker((prevState) => !prevState);
@@ -105,6 +101,36 @@ import { Carousel as Clsreact } from 'react-material-ui-carousel';
   const Showrecentsearch=()=>{  
     setrecentsearch(false)
     setloadingsearch(true)
+    var data = {
+      checkin: "2023-08-10",
+      checkout: "2023-08-18",
+      expected_checkin_time: "13:00",
+      expected_checkout_time: "11:59",
+      latitude: "13.0826802",
+      longitude: "80.2707184",
+      room_config: "A,A",
+      grade: "HS1",
+      payment_mode: "Pay at Hotel",
+      radius: 10
+    };
+    
+    var config = {
+      method: 'post',
+      url: 'https://developers.hummingbirdindia.com/api/v2.2/hotelavailability',
+      headers: { 
+        'Content-Type': 'application/json', 
+        'Accept': 'application/json'
+      },
+      data : data
+    }
+    axios(config)
+.then(response=> {
+  console.log(response.data.data);
+  sethotelapilist(response.data.data);
+})
+.catch(error=> {
+  console.log(error);
+});
     
     setTimeout(() => {
       setloadingsearch(false)
@@ -155,6 +181,15 @@ import { Carousel as Clsreact } from 'react-material-ui-carousel';
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
+  };  
+
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
   };
    return (
     <>
@@ -364,7 +399,8 @@ import { Carousel as Clsreact } from 'react-material-ui-carousel';
     </div>
   </div>
  }
- {searchrender &&
+
+      
   <Card className='mt-5'>
       <CardContent>
         <div className='row'>
@@ -522,10 +558,15 @@ import { Carousel as Clsreact } from 'react-material-ui-carousel';
               </CardContent>
             </Card>
           </div>
-          <div className='col-12 col-md-9'>
-  <Card>
+     
+          <div className='col-12 col-md-9' >
+          {searchrender &&
+  hotelapilist.map((item, index) => {
+    if (item.hoteltype !== "GH") {
+    return (
+  <Card key={index}>
     <CardContent>
-      <div>Hotel</div>
+      <div>{item.hoteltype}</div>
       <div className='mt-3'>
         <div className="row">
           <div className='col-12 col-md-4'>
@@ -540,8 +581,12 @@ import { Carousel as Clsreact } from 'react-material-ui-carousel';
             >
               {/* Carousel slides */}
                     <div>
-                      <img src={img2} alt="Image 1" />
-                    </div>
+  <img
+    src={item.hotelimage}
+    style={{ maxHeight: "150px", objectFit: "cover" }}
+    alt="Image 1"
+  />
+</div>
                     <div>
                       <img src={img5} alt="Image 2" />
                     </div>
@@ -553,148 +598,69 @@ import { Carousel as Clsreact } from 'react-material-ui-carousel';
           <div className='col-12 col-md-4'>
             <Rating
               name="star-rating"
-              value={4}
+              value={item.star_rating}
               readOnly 
               onChange={handleChangerating}
               size="small"
             />
-            <p>Hotel Sam Residency</p>
+            <p>{item.hotelname}</p>
             <div style={{ fontSize: '12px', display: 'inline' }}>
               <LocationOnIcon />
-              <span>Gandhipuram</span>
+              <span>{item.locationinfo.address.locality}</span>
               <br />
               <NearMeIcon />
-              <span>4.5 km from city center</span>
+              <span>{item.distance} km from city center</span>
+              <br/>
+              <span className='text-decoration-underline' style={{cursor:"pointer"}} onClick={handleClickOpen}>Details</span>
             </div>
           </div>
           <div className='col-12 col-md-4'>
             <span><DoneIcon color='success'/>100% GST invoice</span><br/>
-            <span><DoneIcon color='success'/>Free cancellation till 11 Jul'23 11:59 AM</span><br/>
-            <h5 className='mt-1'>₹1,100/night</h5>
+            <span><DoneIcon color='success'/>Free cancellation till {item.freecancellationuntil}</span><br/>
+            <h5 className='mt-1'>₹{item.tariff}/night</h5>
             <button className='btn' onClick={toggleDrawer('right', true)}>Select Room</button>
-          </div>
-        </div>
-      </div>
-    </CardContent>
-  </Card>
-  <Card>
-    <CardContent>
-      <div>Hotel</div>
-      <div className='mt-3'>
-        <div className="row">
-          <div className='col-12 col-md-4'>
-            <Carousel
-              autoPlay
-              infiniteLoop
-              showThumbs={false}
-              showStatus={false}
-              showIndicators={false}
-              interval={3000}
-              stopOnHover={false}
-            >
-              {/* Carousel slides */}
-                    <div>
-                      <img src={img2} alt="Image 1" />
-                    </div>
-                    <div>
-                      <img src={img5} alt="Image 2" />
-                    </div>
-                    <div>
-                      <img src={img7} alt="Image 3" />
-                    </div>
-            </Carousel>
-          </div>
-          <div className='col-12 col-md-4'>
-            <Rating
-              name="star-rating"
-              value={4}
-              readOnly 
-              onChange={handleChangerating}
-              size="small"
-            />
-            <p>Hotel Sam Residency</p>
-            <div style={{ fontSize: '12px', display: 'inline' }}>
-              <LocationOnIcon />
-              <span>Gandhipuram</span>
-              <br />
-              <NearMeIcon />
-              <span>4.5 km from city center</span>
-            </div>
-          </div>
-          <div className='col-12 col-md-4'>
-            <span><DoneIcon color='success'/>100% GST invoice</span><br/>
-            <span><DoneIcon color='success'/>Free cancellation till 11 Jul'23 11:59 AM</span><br/>
-            <h5 className='mt-1'>₹1,100/night</h5>
-            <button className='btn' onClick={toggleDrawer('right', true)}>Select Room</button>
+            <Dialog open={open} onClose={handleClose}>
+        <DialogTitle>
+          Dialog Title
+          <IconButton
+            aria-label="close"
+            onClick={handleClose}
+            sx={{
+              position: 'absolute',
+              right: 8,
+              top: 8,
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        {/* Dialog Content */}
+      </Dialog>
+        
+      
           </div>
         </div>
       </div>
     </CardContent>
   </Card>
   
-  <Card>
-    <CardContent>
-      <div>Hotel</div>
-      <div className='mt-3'>
-        <div className="row">
-          <div className='col-12 col-md-4'>
-            <Carousel
-              autoPlay
-              infiniteLoop
-              showThumbs={false}
-              showStatus={false}
-              showIndicators={false}
-              interval={3000}
-              stopOnHover={false}
-            >
-              {/* Carousel slides */}
-                    <div>
-                      <img src={img2} alt="Image 1" />
-                    </div>
-                    <div>
-                      <img src={img5} alt="Image 2" />
-                    </div>
-                    <div>
-                      <img src={img7} alt="Image 3" />
-                    </div>
-            </Carousel>
-          </div>
-          <div className='col-12 col-md-4'>
-            <Rating
-              name="star-rating"
-              value={4}
-              readOnly 
-              onChange={handleChangerating}
-              size="small"
-            />
-            <p>Hotel Sam Residency</p>
-            <div style={{ fontSize: '12px', display: 'inline' }}>
-              <LocationOnIcon />
-              <span>Gandhipuram</span>
-              <br />
-              <NearMeIcon />
-              <span>4.5 km from city center</span>
-            </div>
-          </div>
-          <div className='col-12 col-md-4'>
-            <span><DoneIcon color='success'/>100% GST invoice</span><br/>
-            <span><DoneIcon color='success'/>Free cancellation till 11 Jul'23 11:59 AM</span><br/>
-            <h5 className='mt-1'>₹1,100/night</h5>
-            <button className='btn' >Select Room</button>
-          </div>
-        </div>
-      </div>
-    </CardContent>
-  </Card>
+  
+  
 
-
+  )
+          }
+          return null;
+          })
+         }
            
             
           </div>
+          
         </div>
       </CardContent>
     </Card>
- }
+  
+  
     </div>
 
     {/* <Drawer anchor="right" open={isOpen} onClose={toggleDrawer} PaperProps={{ style: { width: 1000 } }}>
