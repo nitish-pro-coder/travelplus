@@ -1,5 +1,5 @@
 import { TabContext, TabList, TabPanel } from '@mui/lab'
-import {  Autocomplete, Card, CardContent, IconButton, Tab, TableFooter, TablePagination, TextField } from '@mui/material'
+import {  Autocomplete, Card, CardContent, Container, IconButton, Tab, TableFooter, TablePagination, TextField } from '@mui/material'
 import Button from '@mui/material/Button';
 import React from 'react'
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -46,6 +46,36 @@ export default function Settings() {
       }
       const [text, setText] = React.useState('');
       const options = ['Option 1', 'Option 2', 'Option 3'];
+      const [gstrows, setgstRows] = React.useState([
+        {
+          id: 1,
+          'Entity Name': 'Company A',
+          State: 'State A',
+          GSTIN: 'GSTIN A',
+          'Address 1': 'Address 1 A',
+        'Address 2': 'Address 2 A',
+          Pincode: 'Pincode A',
+    
+        },
+        {
+          id: 2,
+          'Entity Name': 'Company B',
+          State: 'State B',
+          GSTIN: 'GSTIN B',
+          'Address 1': 'Address 1 B',
+        'Address 2': 'Address 2 B',
+          Pincode: 'Pincode B',
+        },
+        {
+          id: 3,
+          'Entity Name': 'Company C',
+          State: 'State C',
+          GSTIN: 'GSTIN C',
+          'Address 1': 'Address 1 C',
+        'Address 2': 'Address 2 C',
+          Pincode: 'Pincode C',
+        },
+      ]);
 
       
     
@@ -191,13 +221,13 @@ export default function Settings() {
         ]);
       
         const columns = [
-          { field: 'Entity Name', headerName: 'Entity Name', width: 100 },
-          { field: 'State', headerName: 'State', width: 100 },
-          { field: 'GSTIN', headerName: 'GSTIN', width: 100 },
-          { field: 'Address 1', headerName: 'Address 1', width: 100 },
-          { field: 'Address 2', headerName: 'Address 2', width: 100 },
-          { field: 'Pincode', headerName: 'Pincode', width: 110 },
-          {
+          {id:1, field: 'Entity Name', headerName: 'Entity Name', width: 100 },
+          {id:2, field: 'State', headerName: 'State', width: 100 },
+          {id:3, field: 'GSTIN', headerName: 'GSTIN', width: 100 },
+          {id:4, field: 'Address 1', headerName: 'Address 1', width: 100 },
+          {id:5, field: 'Address 2', headerName: 'Address 2', width: 100 },
+          {id:6, field: 'Pincode', headerName: 'Pincode', width: 110 },
+          {id:7,
             field: 'action',
             headerName: 'Action',
             width: 100,
@@ -347,7 +377,7 @@ export default function Settings() {
       
       
           if (editingRowIndex !== null) {
-            const updatedRows = [...rows];
+            const updatedRows = [...gstrows];
             updatedRows[editingRowIndex] = {
               id: rows[editingRowIndex].id,
               'Entity Name': formData.entityName,
@@ -357,7 +387,7 @@ export default function Settings() {
             'Address 2': formData.address2,
               Pincode: formData.pincode,
             };
-            setRows(updatedRows);
+            setgstRows(updatedRows);
             setEditingRowIndex(null); // Reset the editing row index
           } else {
             const newId = rows.length + 1;
@@ -370,7 +400,7 @@ export default function Settings() {
               'Address 2': formData.address2,
               Pincode: formData.pincode,
             };
-            setRows((prevRows) => [...prevRows, newRow]);
+            setgstRows((prevRows) => [...prevRows, newRow]);
           }
         
           setOpen(false);
@@ -424,7 +454,8 @@ export default function Settings() {
     <>
     <Navbar/>
    
-    <div className='container d-flex innercontainer'>
+    <Box className="d-flex justify-content-center">
+    <Container maxWidth="lg" className="mb-4 mt-4" sx={{ paddingTop: '80px' }}>
         <TabContext value={value}>
     <TabList
       onChange={handleChange}
@@ -856,7 +887,7 @@ export default function Settings() {
               })
             }
           >
-            <StyledDataGrid rows={rows} columns={columns} pageSize={10} autoHeight />
+            <StyledDataGrid rows={gstrows} columns={columns} pageSize={10} autoHeight />
           </ThemeProvider>
         
       </div>
@@ -875,7 +906,8 @@ export default function Settings() {
 </TabContext>
 
       
-    </div>
+    </Container>
+    </Box>
     </>
   )
 }

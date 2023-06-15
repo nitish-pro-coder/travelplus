@@ -8,7 +8,7 @@ import { DateRange } from "react-date-range";
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import axios from 'axios';
-import { Box, Button, Card, CardContent, Checkbox, Rating, Skeleton, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
+import { Box, Button, Card, CardContent, Checkbox, Divider, Popover, Rating, Skeleton, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
 import Slider from '@mui/material/Slider';
 import Popular from '../Popular/Popular';
 import Navbar from '../../components/Navbar/Navbar';
@@ -30,7 +30,15 @@ import {
   Typography
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { Dialog, DialogTitle} from '@mui/material';
+import { Dialog, DialogTitle,DialogContent,DialogActions} from '@mui/material';
+import { styled } from '@mui/system';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormControl from '@mui/material/FormControl';
+import FormLabel from '@mui/material/FormLabel';
+import { Link } from 'react-router-dom';
+
 
 
  const Home = () => {
@@ -39,7 +47,7 @@ import { Dialog, DialogTitle} from '@mui/material';
     return value;
   }
     useEffect(()=>{
-      Aos.init({duration: 2000})
+      Aos.init({duration: 1000})
     }, [])
     const handleRangeChange = (ranges) => {
       setDateRange([ranges.selection]);
@@ -56,6 +64,7 @@ import { Dialog, DialogTitle} from '@mui/material';
     const [searchrender,setsearchrender]=React.useState(false);
     const [loadingsearch,setloadingsearch]=React.useState(false);
     const [hotelapilist,sethotelapilist]=React.useState([])
+    const [roomapilist,setroomapilist]=React.useState([])
 
     const handleToggleDateRangePicker = () => {
       setShowDateRangePicker((prevState) => !prevState);
@@ -67,10 +76,13 @@ import { Dialog, DialogTitle} from '@mui/material';
   const [state, setState] = React.useState({
     right: false,
   });
+  const [select,setSelect] = React.useState('Select');
+
   
   const handleSelect = (event, value) => {
     setSelectedLocation(value);
     console.log(value)
+    setlocation([{locationname:value.display_name,lat:value.lat,lon:value.lon}])
   };
 
   const calculateDistance = () => {
@@ -98,16 +110,18 @@ import { Dialog, DialogTitle} from '@mui/material';
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+  const GST=[];
   const Showrecentsearch=()=>{  
     setrecentsearch(false)
     setloadingsearch(true)
+    console.log(location)
     var data = {
       checkin: "2023-08-10",
       checkout: "2023-08-18",
       expected_checkin_time: "13:00",
       expected_checkout_time: "11:59",
-      latitude: "13.0826802",
-      longitude: "80.2707184",
+      latitude: location[0]?.lat,
+      longitude: location[0]?.lon,
       room_config: "A,A",
       grade: "HS1",
       payment_mode: "Pay at Hotel",
@@ -118,6 +132,7 @@ import { Dialog, DialogTitle} from '@mui/material';
       method: 'post',
       url: 'https://developers.hummingbirdindia.com/api/v2.2/hotelavailability',
       headers: { 
+        'Authorization': 'FA31C4183B624FF6A70D776420B49B41',
         'Content-Type': 'application/json', 
         'Accept': 'application/json'
       },
@@ -151,11 +166,45 @@ import { Dialog, DialogTitle} from '@mui/material';
   };
   const [isOpen, setIsOpen] = React.useState(false);
 
-  const toggleDrawer = (anchor, open) => (event) => {
+  const toggleDrawer = (anchor, open,index) => (event) => {
+    
+    var data = {
+      "hotelid": hotelapilist[index]?.hotelid,
+      "hotelcode":hotelapilist[index]?.hotelcode,
+      "checkin": "2023-10-05",
+      "checkout": "2023-10-10",
+      "expected_checkin_time": "12:00",
+      "expected_checkout_time": "12:00",
+      "room_config": "A,A",
+      "grade": "HS1"
+    }
+    
+    var config = {
+      method: 'post',
+      url: 'https://developers.hummingbirdindia.com/api/v2.2/roomavailability',
+      headers: { 
+        'Authorization': 'FA31C4183B624FF6A70D776420B49B41',
+        'Content-Type': 'application/json', 
+        'Accept': 'application/json'
+      },
+      data : data
+    }
+    axios(config)
+.then(response=> {
+  
+  console.log(response.data.data);
+  setroomapilist(response.data.data);
+})
+.catch(error=> {
+  console.log(error);
+});
+    
+
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
       return;
     }
     setState({ ...state, [anchor]: open });
+
   };
   const carouselItems = [
     {
@@ -182,15 +231,39 @@ import { Dialog, DialogTitle} from '@mui/material';
     slidesToShow: 1,
     slidesToScroll: 1,
   };  
+  const [hoteldetailsopen,sethoteldetailsopen]=React.useState(false);
+  
 
 
   const handleClickOpen = () => {
-    setOpen(true);
+    sethoteldetailsopen(true);
   };
 
   const handleClose = () => {
-    setOpen(false);
+    sethoteldetailsopen(false);
   };
+  
+
+  const onButtonClick = () =>{
+    setSelect('Selected');
+  }
+  const [popoverOpen, setPopoverOpen] = React.useState(Array(hotelapilist.length).fill(false));
+
+  const handlePopoverOpen = (index) => {
+    const updatedPopoverOpen = [...popoverOpen];
+    updatedPopoverOpen[index] = true;
+    setPopoverOpen(updatedPopoverOpen);
+  };
+  
+  const handlePopoverClose = (index) => {
+    const updatedPopoverOpen = [...popoverOpen];
+    updatedPopoverOpen[index] = false;
+    setPopoverOpen(updatedPopoverOpen);
+  };
+ 
+  // React.useEffect(() => { 
+    
+  // },[])
    return (
     <>
     <Navbar/>
@@ -400,7 +473,7 @@ import { Dialog, DialogTitle} from '@mui/material';
   </div>
  }
 
-      
+{searchrender &&  
   <Card className='mt-5'>
       <CardContent>
         <div className='row'>
@@ -560,8 +633,11 @@ import { Dialog, DialogTitle} from '@mui/material';
           </div>
      
           <div className='col-12 col-md-9' >
-          {searchrender &&
+         
+  {searchrender && hotelapilist &&
+  
   hotelapilist.map((item, index) => {
+    
     if (item.hoteltype !== "GH") {
     return (
   <Card key={index}>
@@ -570,6 +646,7 @@ import { Dialog, DialogTitle} from '@mui/material';
       <div className='mt-3'>
         <div className="row">
           <div className='col-12 col-md-4'>
+            {item.hotelimage.length > 1 && 
             <Carousel
               autoPlay
               infiniteLoop
@@ -587,13 +664,23 @@ import { Dialog, DialogTitle} from '@mui/material';
     alt="Image 1"
   />
 </div>
-                    <div>
+                    {/* <div>
                       <img src={img5} alt="Image 2" />
                     </div>
                     <div>
                       <img src={img7} alt="Image 3" />
-                    </div>
+                    </div> */}
             </Carousel>
+            }
+            
+            {/* {item.hotelimage.length === 1 &&
+              <img
+              src={item.hotelimage}
+              style={{ maxHeight: "150px", objectFit: "cover" }}
+              alt="Image 1"
+            />
+          
+            } */}
           </div>
           <div className='col-12 col-md-4'>
             <Rating
@@ -609,33 +696,50 @@ import { Dialog, DialogTitle} from '@mui/material';
               <span>{item.locationinfo.address.locality}</span>
               <br />
               <NearMeIcon />
-              <span>{item.distance} km from city center</span>
+              <span>{item.distance} km from destination</span>
               <br/>
-              <span className='text-decoration-underline' style={{cursor:"pointer"}} onClick={handleClickOpen}>Details</span>
+              {/* <span className='text-decoration-underline' key={index} style={{cursor:"pointer"}} 
+              onClick={() => handlePopoverOpen(index)}
+              aria-describedby={`popover-${index}`}
+              >Details</span> */}
+              <button
+       className='btn-like' key={index} style={{cursor:"pointer"}} 
+       onClick={() => handlePopoverOpen(index)}
+       aria-describedby={`popover-${index}`}
+>
+  Details
+</button>
+              {/* <button
+      className='btn'
+      onClick={() => handlePopoverOpen(index)}
+      aria-describedby={`popover-${index}`}
+    >
+      Details
+    </button> */}
             </div>
           </div>
           <div className='col-12 col-md-4'>
             <span><DoneIcon color='success'/>100% GST invoice</span><br/>
             <span><DoneIcon color='success'/>Free cancellation till {item.freecancellationuntil}</span><br/>
             <h5 className='mt-1'>₹{item.tariff}/night</h5>
-            <button className='btn' onClick={toggleDrawer('right', true)}>Select Room</button>
-            <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>
-          Dialog Title
-          <IconButton
-            aria-label="close"
-            onClick={handleClose}
-            sx={{
-              position: 'absolute',
-              right: 8,
-              top: 8,
-            }}
-          >
-            <CloseIcon />
-          </IconButton>
-        </DialogTitle>
-        {/* Dialog Content */}
-      </Dialog>
+            <button className='btn' onClick={toggleDrawer('right', true,index)}>Select Room</button>
+            <Dialog
+  open={popoverOpen[index]}
+  onClose={() => handlePopoverClose(index)}
+  fullWidth
+  maxWidth="xs"
+>
+  <DialogTitle className="border-bottom text-center">
+    {item.hotelname}
+    <IconButton aria-label="close" onClick={() => handlePopoverClose(index)} className="position-absolute end-0">
+      <CloseIcon />
+    </IconButton>
+  </DialogTitle>
+  <DialogContent>
+    <p>{item.hoteldescription}</p>
+  </DialogContent>
+</Dialog>
+
         
       
           </div>
@@ -659,7 +763,7 @@ import { Dialog, DialogTitle} from '@mui/material';
         </div>
       </CardContent>
     </Card>
-  
+ }
   
     </div>
 
@@ -703,12 +807,9 @@ import { Dialog, DialogTitle} from '@mui/material';
     </Table>
 
      <div className='row justify-content-center'>
-      <div className='col-6'>
-        <Card>
+      <div className='col-8'>
+        <Card >
           <CardContent>
-         
-        
-     
       <Carousel
       showThumbs={false}
       infiniteLoop
@@ -716,16 +817,41 @@ import { Dialog, DialogTitle} from '@mui/material';
       showIndicators={false}
       autoFocus={true}
        
-    >
-       {carouselItems.map((item, index) => (
+     >
+       {roomapilist.map((item, index) => (
         <>
      <Typography variant="h5" component="div" sx={{background:"rgba(216, 216, 216, 0.2)",p:3}}>
           {item.title}
         </Typography>
+        <div className = 'row'>
+        <div className='col-6'>
+        <Typography className = 'mt-3' >
+          Room only
+        </Typography>
+        </div>
+        <div className='col-6'>
         <Typography className='mt-3' variant="body1">
          {item.description}
         </Typography>
-       
+        </div>
+        </div>
+        <div className = 'row'>
+          <div className = 'col-6'>
+          <Link
+         component="button"
+          variant="body2"
+          onClick={() => {
+            console.info("I'm a button.");
+          }}
+          className="text-decoration-none"
+        >
+        View cancellation policy 
+        </Link>
+          </div>
+          <div className='col-6'>
+          <button className='btn' onClick={onButtonClick}>{select}</button>
+          </div>
+        </div>
         </>
        ))}
     </Carousel>
@@ -733,16 +859,81 @@ import { Dialog, DialogTitle} from '@mui/material';
     </Card>
             </div>
             </div>
+    <Divider className='mt-4'></Divider>
+    <div className='row justify-content-center mt-3'>
+      <div className='col-8'>
+    <Card >
+     <CardContent>
+   <h4>Price Breakup</h4>
+    <div className = 'row ms-3 mt-3'>
+    <div className = 'col-6'>
+    <p> Room Charges</p>
+    </div>
+    <div className='col-6'>
+     <span>₹1,935.0</span>
+    </div>
+    </div>
+    <div className='row ms-3'>
+      <div className = 'col-6'>
+        <p> GST </p>
+      </div>
+      <div className='col-6'>
+        <span>₹173.12</span>
+      </div>
+    </div>
+    <Divider variant="middle" />
+    <div className='row ms-3 mt-4'>
+      <div className = 'col-6'>
+        <p>Total booking amount</p>
+      </div>
+      <div className='col-6'>
+        <h4>₹2,115.0</h4>
+      </div>
+    </div>
+    <div className='mt-3 ms-4 mb-3'>
+    <Autocomplete
+      disablePortal
+      id="combo-box-demo"
+      options={GST}
+      sx={{ width: 300 }}
+      renderInput={(params) => <TextField {...params} label="GST" />}
+    />
+    </div>
+    <Divider variant="middle" />
+    <div className=' mt-3'>
+      <h4>Cancellation Policy</h4>
+      <span className='mt-3 ms-4'>Free cancellation till 13 Jun'23 11:59 AM</span>
+    </div>
+    <Divider variant="middle mt-3" />
+    <div className='mt-3 mb-3'>
+      <h4>Payment mode</h4>
+    </div>
+  <div className='ms-4'>
+  <FormControl>
+  <FormLabel id="demo-controlled-radio-buttons-group"></FormLabel>
+  <RadioGroup
+    aria-labelledby="demo-controlled-radio-buttons-group"
+    name="controlled-radio-buttons-group"
+    value={value}
+    onChange={handleChange}
+  >
+    <FormControlLabel value="hotel" control={<Radio />} label="Pay @ HOTEL" />
+    <FormControlLabel value="now" control={<Radio />} label="Pay now" />
+    <FormControlLabel value="wallet" control={<Radio />} label="Wallet" />
+  </RadioGroup>
+</FormControl>
+</div>
+    <div className='row justify-content-center'>
+      <div className='col-8'>
+        <button className='btn' onClick={onButtonClick}>Confirm Booking</button>
+      </div>
+       </div>
+    </CardContent>
+    </Card>
+    </div>
+    </div>
 
-
-    
-
-
-        
-
-
-      
-</Drawer>
+</Drawer>   
 
 
     

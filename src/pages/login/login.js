@@ -85,7 +85,7 @@ function Login() {
                   <input type="email" placeholder="Email" value={email} onChange={handleEmailChange} />
                 </div>
               )}
-              <input type="submit" value="Login" className="btn solid" onClick={sendmail}  />
+              <input type="submit" value="Login" className="btn1 solid" onClick={sendmail}  />
             </form>
           ) : (
             <form action="#" className="sign-in-form">
@@ -94,7 +94,7 @@ function Login() {
                 <i className="fas fa-lock"></i>
                 <input type="text" placeholder="OTP" value={otp} onChange={handleOtpChange} />
               </div>
-              <button value="Verify OTP" className="btn solid" onClick={handleLoginSubmit} >Verify OTP</button>
+              <button value="Verify OTP" className="btn1 solid" onClick={handleLoginSubmit} >Verify OTP</button>
             </form>
           )}
           <form action="#" className="sign-up-form">
@@ -107,7 +107,7 @@ function Login() {
               <i className="fas fa-lock"></i>
               <input type="password" placeholder="Password" />
             </div>
-            <input type="submit" className="btn" value="Sign up" />
+            <input type="submit" className="btn1" value="Sign up" />
           </form>
         </div>
       </div>
@@ -117,7 +117,7 @@ function Login() {
           <div className="content">
             <h3>New here?</h3>
             <p>Drop us your Domain ❤️</p>
-            <button onClick={handleSignUpClick} className="btn transparent" id="sign-up-btn">
+            <button onClick={handleSignUpClick} className="btn1 transparent" id="sign-up-btn">
               Sign up
             </button>
           </div>
@@ -126,7 +126,7 @@ function Login() {
           <div className="content">
             <h3>One of us?</h3>
             <p>Sign in and Start your Travel 💜</p>
-            <button onClick={handleSignInClick} className="btn transparent" id="sign-in-btn">
+            <button onClick={handleSignInClick} className="btn1 transparent" id="sign-in-btn">
               Sign in
             </button>
           </div>

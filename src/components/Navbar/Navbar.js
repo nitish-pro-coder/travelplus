@@ -104,8 +104,8 @@ const Navbar = () => {
                 <Link to='/payment' className='navLink'>Payment & Invoices</Link>
               </li>
               
-              <div className="headerBtns flex loginBtn">
-              <button className="btn " onClick={toggleDrawer('right', true)}>
+              <div className="headerBtns flex ">
+              <button className="btn loginBtn" onClick={toggleDrawer('right', true)}>
                <SlWallet classname="icon" fill="white"/>
               </button>
               <Drawer

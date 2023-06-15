@@ -12,6 +12,7 @@ import Popular from './pages/Popular/Popular';
 import SignInSide from './pages/LoginPage';
 import FormDialog from './pages/gstmangement';
 import Login from './pages/login/login';
+import MyComponent from './pages/Modal';
 // import Login from './pages/Login';
 
 const App = () => {
@@ -35,6 +36,7 @@ const App = () => {
         <Route path='/gstmanagement' element={<FormDialog/>}></Route>
         <Route path='/Insights' element={<Insight/>}/>
         {/* <Route  path='/Login' element={<Login/>}/> */}
+        <Route path='/modal' element={<MyComponent/>}/>
   
         
       </Routes>

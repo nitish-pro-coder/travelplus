@@ -10,9 +10,9 @@ import TabPanel from '@mui/lab/TabPanel';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from "@mui/material/InputAdornment";
 import SearchIcon from '@mui/icons-material/Search';
-import { Table, TableHead, TableBody, TableRow, TableCell} from '@mui/material';
+import { Table, TableHead, TableBody, TableRow, TableCell,Box} from '@mui/material';
 import Chip from '@mui/material/Chip';
-import { Dialog, DialogTitle, DialogContent, Button,Box} from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, Button} from '@mui/material';
 import {useState} from 'react';
 import { DateRange } from 'react-date-range';
 import 'react-date-range/dist/styles.css'; // Import the styles for the date picker
@@ -213,6 +213,7 @@ export default function Payment() {
                 <p className='fw-bold' style={{marginTop:"-35px"}}>Cumulative</p>
                 <Chip label="45+ days" variant="outlined" onClick={handleClick} style={{ marginRight: '5px' }} />
                 <Chip label="60+ days" variant="outlined" onClick={handleClick} style={{ marginRight: '5px' }} />
+                
                 </div>
                 
                 <div className='col-3'>
