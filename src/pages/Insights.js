@@ -19,10 +19,14 @@ import {
   TableRow,
 } from '@mui/material';
 import Chart from 'chart.js/auto';
+import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import Chip from '@mui/material/Chip';
 import { CalendarToday } from '@mui/icons-material';
 import Navbar from '../components/Navbar/Navbar';
 
 const InsightsDashboard = () => {
+  
   const chartRef = useRef(null);
   const barChartRef = useRef(null);
   const [barChartData, setBarChartData] = useState([]);
@@ -33,7 +37,11 @@ const InsightsDashboard = () => {
     { city: 'Chennai', totalSpend: 7000 },
     { city: 'Kolkata', totalSpend: 9000 },
   ]);
-
+  const [selectedOption, setSelectedOption] = useState('');
+      
+  const handleChange = (event) => {
+    setSelectedOption(event.target.value);
+  }
   useEffect(() => {
     let barChart;
     let doughnutChart;
@@ -56,7 +64,7 @@ const InsightsDashboard = () => {
             {
               label: 'Total Spend',
               data: spendByCities.map((city) => city.totalSpend),
-              backgroundColor: '#36A2EB',
+              backgroundColor: '#7862dc',
             },
           ],
         },
@@ -71,7 +79,10 @@ const InsightsDashboard = () => {
           },
         },
       });
-
+    
+       
+    
+      
       // Initialize the doughnut chart
       doughnutChart = new Chart(chartRef.current, {
         type: 'doughnut',
@@ -146,16 +157,19 @@ const InsightsDashboard = () => {
   return (
     <>
     <Navbar/>
+    {/* <Container className='container-sm'> */}
+    <Box className="d-flex justify-content-center">
+        <Container maxWidth="lg" className="mb-4 mt-4" sx={{ paddingTop: '80px' }}>
     <Card variant="outlined" >
-      <div className='container innercontainer' >
-            <FormControl  variant="outlined" >
+      <div className='container ' >
+            <FormControl  variant="outlined" className='float-end'>
               <InputLabel id="select-label">
                 <Icon>
                   <CalendarToday />
                 </Icon>{' '}
                 Select Date
               </InputLabel>
-              <Select labelId="select-label" id="select" label="Select Date" onChange={handleDateChange}>
+              <Select labelId="select-label" id="select" label="Select Date" onChange={handleDateChange} maxWidth='120px' width='120px'>
                 <MenuItem value="last30">Last 30 Days</MenuItem>
                 <MenuItem value="last15">Last 15 Days</MenuItem>
                 <MenuItem value="last7">Last 7 Days</MenuItem>
@@ -163,49 +177,72 @@ const InsightsDashboard = () => {
                 <MenuItem value="custom">Custom</MenuItem>
               </Select>
             </FormControl>
-          
-        
-
         <main>
           <section id="booking-overview">
           <p className="mt-4 fw-bold">BOOKINGS</p>
             <Grid container spacing={2}>
+              <div className='row'>
+              <div className='col-6'>
               <Grid item xs={12} md={3}>
-                <Card sx={{ height: '100%' }}>
+                <Card sx={{ boxShadow: '0 6px 10px rgba(0, 0, 0, 0.3)',height: '100px',width: '300px' }}>
                   <CardContent>
-                    <Typography variant="h4">Total Spend on Hotels</Typography>
-                    <Typography variant="h6">$50,000</Typography>
+                   <p className='text-secondary'>Total Spend on Hotels</p>
+                   <div className='row'>
+                    <div className='col-6'>
+                    <h3 className='text-dark'>$50,000</h3>
+                    </div>
+                    <div className='col-6'>
+                    <Chip label="75.0%" icon = {<ArrowDropDownIcon color='red' />}  sx={{ color: '#8B0000', bgcolor: '#FFCDD2', borderColor: 'red' }}/>
+                    </div>
+                    </div>
                   </CardContent>
                 </Card>
               </Grid>
+              </div>
+              <div className='col-6'>
               <Grid item xs={12} md={3}>
-                <Card sx={{ height: '100%' }}>
+                <Card sx={{ boxShadow: '0 6px 10px rgba(0, 0, 0, 0.3)',height: '100px',width: '300px' }}>
                   <CardContent>
-                    <Typography variant="h4">Average Booking Window</Typography>
-                    <Typography variant="h6">14 days</Typography>
+                    <p className='text-secondary'>Average Booking Window</p>
+                    <h3 className='text-dark'>14 days</h3>
                   </CardContent>
                 </Card>
               </Grid>
+              </div>
+              </div>
+              <div className='row mt-4'>
+              <div className='col-6'>
               <Grid item xs={12} md={3}>
-                <Card sx={{ height: '100%' }}>
+                <Card sx={{ boxShadow: '0 6px 10px rgba(0, 0, 0, 0.3)',height: '100px',width: '300px' }}>
                   <CardContent>
-                    <Typography variant="h4">Average Daily Rate</Typography>
-                    <Typography variant="h6">$150</Typography>
+                    <p className='text-secondary'>Average Daily Rate</p>
+                    <div className='row'>
+                    <div className='col-6'>
+                    <h3 className='text-dark'>$150</h3>
+                    </div>
+                    <div className='col-6'>
+                    <Chip label="75.0%" icon = {<ArrowDropUpIcon color='#006400' />}  sx={{ color: '#006400', bgcolor: '#CAEEC2', borderColor: 'green' }}/>
+                    </div>
+                    </div>
                   </CardContent>
                 </Card>
               </Grid>
+              </div>
+              <div className='col-6'>
               <Grid item xs={12} md={3}>
-                <Card sx={{ height: '100%' }}>
+                <Card sx={{ boxShadow: '0 6px 10px rgba(0, 0, 0, 0.3)',height: '100px',width: '300px' }}>
                   <CardContent>
-                    <Typography variant="h4">Average Length of Stay</Typography>
-                    <Typography variant="h6">3 nights</Typography>
+                    <p className='text-secondary'>Average Length of Stay</p>
+                    <h3>3 nights</h3>
                   </CardContent>
                 </Card>
               </Grid>
+              </div>
+              </div>
               <Grid item xs={12} md={12}>
-                <Card variant="outlined">
+                <Card variant="outlined" sx={{boxShadow: '0 6px 10px rgba(0, 0, 0, 0.3)'}}>
                   <CardContent>
-                    <Typography variant="h4">Total Spend by Day</Typography>
+                    <h4>Total Spend by Day</h4>
                     <Box sx={{ position: 'relative', height: '300px' }}>
                       <canvas ref={barChartRef} />
                     </Box>
@@ -213,9 +250,9 @@ const InsightsDashboard = () => {
                 </Card>
               </Grid>
               <Grid item xs={12} md={4}>
-                <Card md={{ height: '100%' }}>
+                <Card md={{ height: '100%' }} sx={{boxShadow: '0 6px 10px rgba(0, 0, 0, 0.3)'}}>
                   <CardContent>
-                    <Typography variant="h4">Spend by Cities</Typography>
+                    <h4>Spend by Cities</h4>
                     <TableContainer>
                       <Table>
                         <TableHead>
@@ -240,9 +277,9 @@ const InsightsDashboard = () => {
                 </Card>
               </Grid>
               <Grid item xs={12} md={8}>
-                <Card>
+                <Card sx={{boxShadow: '0 6px 10px rgba(0, 0, 0, 0.3)'}}>
                   <CardContent>
-                    <Typography variant="h4">Spend by Cities Chart</Typography>
+                    <h4>Spend by Cities Chart</h4>
                     <Box sx={{ position: 'relative', height: '300px' }}>
                       <canvas ref={chartRef} />
                     </Box>
@@ -250,19 +287,13 @@ const InsightsDashboard = () => {
                 </Card>
               </Grid>
             </Grid>
-            <Grid item xs={12} md={4}>
-  <Card sx={{ height: '100%' }}>
-    <CardContent>
-      <Typography variant="h4">Card C</Typography>
-      <Typography variant="h6">Content C</Typography>
-    </CardContent>
-  </Card>
-</Grid>
-
           </section>
         </main>
         </div>
     </Card>
+    {/* </Container> */}
+    </Container>
+    </Box>
     </>
   );
 };
