@@ -51,6 +51,7 @@ import { Link } from 'react-router-dom';
     }, [])
     const handleRangeChange = (ranges) => {
       setDateRange([ranges.selection]);
+      console.log(ranges);
     };
     const [dateRange, setDateRange] = React.useState([
       {
