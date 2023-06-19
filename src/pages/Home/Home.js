@@ -5,10 +5,11 @@ import 'aos/dist/aos.css'
 import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css'; // theme css file
 import { DateRange } from "react-date-range";
+import Card from '@mui/material/Card';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import axios from 'axios';
-import { Box, Button, Card, CardContent, Checkbox, Divider, Popover, Rating, Skeleton, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
+import { Box, Button,  CardContent, Checkbox, Divider, Popover, Rating, Skeleton, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
 import Slider from '@mui/material/Slider';
 import Popular from '../Popular/Popular';
 import Navbar from '../../components/Navbar/Navbar';
@@ -782,6 +783,7 @@ import { Link } from 'react-router-dom';
         onClose={toggleDrawer('right', false)}
         PaperProps={{ style: { width: 1000 } }}
       >
+
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 2,backgroundColor:'#7862dc'}}>
           <Typography variant="h6" color={"#fff"}>Hotel Sam Residency</Typography>
           <IconButton onClick={toggleDrawer('right', false)}>

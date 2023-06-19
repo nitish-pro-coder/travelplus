@@ -4,6 +4,7 @@ import {AiFillCloseCircle} from 'react-icons/ai'
 import {TbGridDots} from 'react-icons/tb'
 import {SiYourtraveldottv} from 'react-icons/si'
 import {SlWallet } from 'react-icons/sl'
+import Card from '@mui/material/Card'
 import { Drawer, IconButton, TextField, Select, MenuItem, Table, TableHead, TableBody, TableRow, TableCell, Typography, InputAdornment, Divider } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import AddIcon from '@mui/icons-material/Add';
@@ -120,7 +121,6 @@ const Navbar = () => {
       <CloseIcon htmlColor={'#fff'} />
     </IconButton>
   </Box>
-
   <Box sx={{ p: 2 }}>
     <div className="d-flex justify-content-between align-items-center mt-3">
       <h3 className="mt-3">Balance amount</h3>
@@ -128,12 +128,11 @@ const Navbar = () => {
         Add Balance
       </Button>
     </div>
-
-    <h5 className="mt-1">₹ 0.00</h5>
-
-    <Divider />
-
-    <div className="mt-4 d-flex flex-wrap gap-2 mb-2 w-75">
+    <h5 className="mt-1 mb-4">₹ 0.00</h5>
+    <Divider className='mb-4' variant='outlined'/>
+  <Card>
+  <h4 className='ms-3'>Transactions</h4>
+  <div className="mt-4 d-flex flex-wrap gap-2 mb-2 w-75 ms-4">
   <TextField
     label="Search"
     value={searchTerm}
@@ -154,7 +153,7 @@ const Navbar = () => {
     // value={typeFilter}
     // onChange={handleTypeFilterChange}
     variant="outlined"
-    className="w-25" // Set Select width to not grow
+    className="w-25 ms-4" // Set Select width to not grow
   >
     <MenuItem value="Jun'23">Jun'23</MenuItem>
     <MenuItem value="May'23">May'23</MenuItem>
@@ -165,22 +164,23 @@ const Navbar = () => {
     // value={typeFilter}
     // onChange={handleTypeFilterChange}
     variant="outlined"
-    className="w-25" // Set Select width to not grow
+    className="w-25 ms-4" // Set Select width to not grow
   >
     <MenuItem value="Credit">Credit</MenuItem>
     <MenuItem value="Debit">Debit</MenuItem>
   </Select>
 </div>
+</Card>
 
-
-
+<Card sx={{ boxShadow: '0 6px 10px rgba(0, 0, 0, 0.3)' }}>
     <Table>
       <TableHead>
         <TableRow>
-          <TableCell style={{ backgroundColor: '#f5f5f5', fontWeight: 'bold' }}>ID</TableCell>
-          <TableCell style={{ backgroundColor: '#f5f5f5', fontWeight: 'bold' }}>Name</TableCell>
-          <TableCell style={{ backgroundColor: '#f5f5f5', fontWeight: 'bold' }}>Status</TableCell>
+          <TableCell style={{ backgroundColor: '#f5f5f5', fontWeight: 'bold' }}>Transaction ID</TableCell>
           <TableCell style={{ backgroundColor: '#f5f5f5', fontWeight: 'bold' }}>Type</TableCell>
+          <TableCell style={{ backgroundColor: '#f5f5f5', fontWeight: 'bold' }}>Description</TableCell>
+          <TableCell style={{ backgroundColor: '#f5f5f5', fontWeight: 'bold' }}>Transaction Date</TableCell>
+          <TableCell style={{ backgroundColor: '#f5f5f5', fontWeight: 'bold' }}>Amount</TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
@@ -202,8 +202,10 @@ const Navbar = () => {
         )}
       </TableBody>
     </Table>
+  </Card>
   </Box>
 </Drawer>
+
 
 <div className="loginBtn">
 <Link  to="/settings">
