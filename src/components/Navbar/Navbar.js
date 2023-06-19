@@ -122,13 +122,15 @@ const Navbar = () => {
     </IconButton>
   </Box>
   <Box sx={{ p: 2 }}>
+  <Card sx={{boxShadow: '0 6px 10px rgba(0, 0, 0, 0.3)'}}>
     <div className="d-flex justify-content-between align-items-center mt-3">
-      <h3 className="mt-3">Balance amount</h3>
-      <Button variant="contained" startIcon={<AddIcon />} className="ms-auto" style={{ backgroundColor: '#7862dc' }}>
+      <h3 className="mt-3 ms-2">Balance amount</h3>
+      <Button variant="contained" startIcon={<AddIcon />} className="mr-4" style={{ backgroundColor: '#7862dc' }}>
         Add Balance
       </Button>
     </div>
-    <h5 className="mt-1 mb-4">₹ 0.00</h5>
+    <h5 className="mt-1 mb-4 ms-4">₹ 0.00</h5>
+    </Card>
     <Divider className='mb-4' variant='outlined'/>
   <Card>
   <h4 className='ms-3'>Transactions</h4>
