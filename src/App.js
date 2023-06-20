@@ -13,6 +13,7 @@ import SignInSide from './pages/LoginPage';
 import FormDialog from './pages/gstmangement';
 import Login from './pages/login/login';
 import MyComponent from './pages/Modal';
+import CardComponent from './pages/Reactdatepicker';
 // import Login from './pages/Login';
 
 const App = () => {
@@ -25,7 +26,7 @@ const App = () => {
     )
   }
   return (
-    <>
+    
     <Router>
       <Routes>
         <Route path='/' element={<HomeComponent/>}/>
@@ -37,14 +38,15 @@ const App = () => {
         <Route path='/Insights' element={<Insight/>}/>
         {/* <Route  path='/Login' element={<Login/>}/> */}
         <Route path='/modal' element={<MyComponent/>}/>
+        <Route path="/card" element={<CardComponent/>}/>
+        
   
         
       </Routes>
     </Router>
  
-   {/* <Home/>
-   <Popular/> */}
-   </>
+   
+  
   )
 }
 

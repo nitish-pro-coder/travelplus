@@ -9,7 +9,8 @@ import Card from '@mui/material/Card';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import axios from 'axios';
-import { Box, Button,  CardContent, Checkbox, Divider, Popover, Rating, Skeleton, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
+import { Box, Button, CardContent, Checkbox, Divider, FormGroup, Popover, Rating, Skeleton, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
+// import { Box, Button,  CardContent, Checkbox, Divider, Popover, Rating, Skeleton, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
 import Slider from '@mui/material/Slider';
 import Popular from '../Popular/Popular';
 import Navbar from '../../components/Navbar/Navbar';
@@ -28,7 +29,7 @@ import {
   Toolbar,
   IconButton,
   Drawer,
-  Typography
+  Typography,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { Dialog, DialogTitle,DialogContent,DialogActions} from '@mui/material';
@@ -38,7 +39,11 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
-import { Link } from 'react-router-dom';
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+
 
 
 
@@ -107,12 +112,14 @@ import { Link } from 'react-router-dom';
     const distance = earthRadius * c;
   console.log(distance.toFixed(2));
   };
-  const [value, setValue] = React.useState([0, 8000]); // Set initial range values
+  const [value, setValue] = React.useState([0, 5000]); // Set initial range values
 
   const handleChange = (event, newValue) => {
+    console.log(newValue)
     setValue(newValue);
   };
   const GST=[];
+  console.log(value[0])
   const Showrecentsearch=()=>{  
     setrecentsearch(false)
     setloadingsearch(true)
@@ -125,9 +132,11 @@ import { Link } from 'react-router-dom';
       latitude: location[0]?.lat,
       longitude: location[0]?.lon,
       room_config: "A,A",
-      grade: "HS1",
+      // grade: "HS1",
       payment_mode: "Pay at Hotel",
-      radius: 10
+      radius: 15,
+      min:100,
+      max: value[1]
     };
     
     var config = {
@@ -158,10 +167,16 @@ import { Link } from 'react-router-dom';
     
     
   }
-  const [checked, setChecked] = React.useState(false);
+  const [checked, setChecked] = React.useState([]);
 
   const handleCheckboxChange = (event) => {
-    setChecked(event.target.checked);
+    console.log(event.target.value)
+    const value = event.target.value;
+    if (checked.includes(value)) {
+      setChecked(checked.filter((item) => item !== value));
+    } else {
+      setChecked([...checked, value]);
+    }
   };
   const handleChangerating = (event, newValue) => {
     console.log(newValue);
@@ -175,6 +190,7 @@ import { Link } from 'react-router-dom';
       "hotelcode":hotelapilist[index]?.hotelcode,
       "checkin": "2023-10-05",
       "checkout": "2023-10-10",
+      
       "expected_checkin_time": "12:00",
       "expected_checkout_time": "12:00",
       "room_config": "A,A",
@@ -234,8 +250,9 @@ import { Link } from 'react-router-dom';
     slidesToScroll: 1,
   };  
   const [hoteldetailsopen,sethoteldetailsopen]=React.useState(false);
-  
-
+  let tempElement = document.createElement("div");
+  let textContent = tempElement.textContent;
+  console.log(textContent)
 
   const handleClickOpen = () => {
     sethoteldetailsopen(true);
@@ -250,22 +267,54 @@ import { Link } from 'react-router-dom';
     setSelect('Selected');
   }
   const [popoverOpen, setPopoverOpen] = React.useState(Array(hotelapilist.length).fill(false));
+  const [amenitiesOpen, setamenitiesOpen] = React.useState(Array(hotelapilist.length).fill(false));
 
   const handlePopoverOpen = (index) => {
     const updatedPopoverOpen = [...popoverOpen];
     updatedPopoverOpen[index] = true;
     setPopoverOpen(updatedPopoverOpen);
   };
-  
+  const handleamenitiesOpen = (index) => {
+    const updatedPopoverOpen = [...popoverOpen];
+    updatedPopoverOpen[index] = true;
+    setamenitiesOpen(updatedPopoverOpen);
+  };
   const handlePopoverClose = (index) => {
     const updatedPopoverOpen = [...popoverOpen];
     updatedPopoverOpen[index] = false;
     setPopoverOpen(updatedPopoverOpen);
   };
+  const handleaminitiesClose = (index) => {
+    const updatedPopoverOpen = [...popoverOpen];
+    updatedPopoverOpen[index] = false;
+    setamenitiesOpen(updatedPopoverOpen);
+  };
  
-  // React.useEffect(() => { 
+  React.useEffect(() => { 
+    console.log(checked);
+    const item = {
+      amenities: [true, false, true, false, true, true]
+    };
     
-  // },[])
+    // const filteredAmenities = item.amenities.filter(amenity => amenity === true);
+    // const amenitiesList = filteredAmenities.map(amenity => amenity.toString());
+    
+    // console.log(amenitiesList);
+    
+    
+    
+  },[checked])
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const handlePopoverOpen1 = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handlePopoverClose1 = () => {
+    setAnchorEl(null);
+  };
+
+  const open1 = Boolean(anchorEl);
    return (
     <>
     <Navbar/>
@@ -316,7 +365,7 @@ import { Link } from 'react-router-dom';
       options={locationlist}
     onChange={handleSelect}
      value={selectedLocation}
-    getOptionLabel={(option) =>`${option.display_name}`}
+    getOptionLabel={(option) =>`${option?.display_name}`}
    
       renderInput={(params) => <TextField {...params}  
       variant="standard"
@@ -374,7 +423,7 @@ import { Link } from 'react-router-dom';
             valueLabelDisplay="auto"
             getAriaValueText={valuetext}
             min={0} // Set the minimum value to 0
-            max={8000} // Set the maximum value to 8000
+            max={5000} // Set the maximum value to 8000
           />
         </Box>
            </div>
@@ -480,166 +529,56 @@ import { Link } from 'react-router-dom';
       <CardContent>
         <div className='row'>
           <div className='col-md-3'>
-            <Card>
-              <CardContent>
-                <div className="d-flex justify-content-between align-items-center">
-                  <p>Filters</p>
-                  <p>Clear All</p>
+          <Card>
+      <CardContent>
+        <div className="d-flex justify-content-between align-items-center">
+          <Typography variant="body1">Filters</Typography>
+          <button className='btn-like'  onClick={()=>{setChecked([])}} >Clear All</button>
+        </div>
+
+        
+
+        
+
+      
+
+        <div className="mt-3">
+          
+          <Typography variant="body1">Star rating</Typography>
+           
+         <FormGroup>
+            {[5, 4, 3, 2, 1].map((rating) => (
+              <div className="row" key={rating}>
+                <div className="col-9">
+                  <Rating
+                    name="star-rating"
+                    value={rating}
+                    readOnly
+                    onChange={handleChangerating}
+                    size="small"
+                  />
                 </div>
-                <div className="row">
-                  <div className="col-9">
-                    <p className="d-inline" style={{ fontSize: "12px" }}>
-                      Show recommended only
-                    </p>
-                  </div>
-                  <div className="col-3">
-                    <Checkbox
-                      className="mr-auto"
-                      checked={checked}
-                      onChange={handleCheckboxChange}
-                      color="primary"
-                    />
-                  </div>
-                </div>
-
-                <div className="row">
-                  <div className="col-9">
-                    <p className="d-inline" style={{ fontSize: "12px" }}>
-                      Show pay@Hotel only
-                    </p>
-                  </div>
-                  <div className="col-3">
-                    <Checkbox
-                      className="mr-auto"
-                      checked={checked}
-                      onChange={handleCheckboxChange}
-                      color="primary"
-                    />
-                  </div>
-                </div>
-                <div className="row mt-3">
-          <div className="col-md-9 col-8">
-            <p>Price range</p>
-          </div>
-          <div className="col-md-3 col-4">
-            <Checkbox
-              checked={checked}
-              onChange={handleCheckboxChange}
-              color="primary"
-            />
-          </div>
-        </div>
-
-        <div className="row">
-          <div className="col-md-9 col-8">
-            <p className="d-inline" style={{ fontSize: "14px" }}>
-              Upto ₹2,000
-            </p>
-          </div>
-          <div className="col-md-3 col-4">
-            <Checkbox
-              checked={checked}
-              onChange={handleCheckboxChange}
-              color="primary"
-            />
-          </div>
-        </div>
-
-        <div className="row">
-          <div className="col-md-9 col-8">
-            <p className="d-inline" style={{ fontSize: "14px" }}>
-              ₹2,001 - ₹4,000
-            </p>
-          </div>
-          <div className="col-md-3 col-4">
-            <Checkbox
-              checked={checked}
-              onChange={handleCheckboxChange}
-              color="primary"
-            />
-          </div>
-        </div>
-
-        <div className="row">
-          <div className="col-md-9 col-8">
-            <p className="d-inline" style={{ fontSize: "14px" }}>
-              ₹4,001 - ₹6,000
-            </p>
-          </div>
-          <div className="col-md-3 col-4">
-            <Checkbox
-              checked={checked}
-              onChange={handleCheckboxChange}
-              color="primary"
-            />
-          </div>
-        </div>
-
-        <div className="row">
-          <div className="col-md-9 col-8">
-            <p className="d-inline" style={{ fontSize: "14px" }}>
-              ₹6,001 - ₹8,000
-            </p>
-          </div>
-          <div className="col-md-3 col-4">
-            <Checkbox
-              checked={checked}
-              onChange={handleCheckboxChange}
-              color="primary"
-            />
-          </div>
-        </div>
-
-        <div className="row">
-          <div className="col-md-9 col-8">
-            <p className="d-inline" style={{ fontSize: "14px" }}>
-              ₹8,000 +
-            </p>
-          </div>
-          <div className="col-md-3 col-4">
-            <Checkbox
-              checked={checked}
-              onChange={handleCheckboxChange}
-              color="primary"
-            />
-          </div>
-        </div>
-
-                 
-<div className="mt-3">
-  <p>Star rating</p>
-  {[5, 4, 3, 2, 1].map((rating) => (
-    <div className="row" key={rating}>
-      <div className="col-9">
-      <Rating
-        name="star-rating"
-        value={rating}
-        readOnly
-        onChange={handleChangerating}
-        size="small"
-      />
-      </div>
-      <div className="col-3">
-      <Checkbox
-        checked={checked}
+                <div className="col-3">
+                <FormControlLabel
+        control={<Checkbox checked={checked.includes(rating.toString())}
         onChange={handleCheckboxChange}
-        color="primary"
+        value={rating.toString()}
+        color="primary" />}
       />
-      </div>
-    </div>
-  ))}
-</div>
-
-              </CardContent>
-            </Card>
+                </div>
+              </div>
+            ))}
+            </FormGroup>
+          
+        </div>
+      </CardContent>
+    </Card>
           </div>
      
           <div className='col-12 col-md-9' >
          
-  {searchrender && hotelapilist &&
-  
-  hotelapilist.map((item, index) => {
-    
+          {searchrender && hotelapilist && hotelapilist.map((item, index) => {
+  if (item.star_rating && checked.includes(item.star_rating.toString()) || checked.length === 0) {
     if (item.hoteltype !== "GH") {
     return (
   <Card key={index}>
@@ -684,14 +623,18 @@ import { Link } from 'react-router-dom';
           
             } */}
           </div>
+          
           <div className='col-12 col-md-4'>
-            <Rating
-              name="star-rating"
-              value={item.star_rating}
-              readOnly 
-              onChange={handleChangerating}
-              size="small"
-            />
+          
+  <Rating
+    name="star-rating"
+    value={item.star_rating}
+    readOnly
+    onChange={handleChangerating}
+    size="small"
+  />
+  {/* {item.star_rating && checked.includes(item.star_rating.toString()) && (
+)} */}
             <p>{item.hotelname}</p>
             <div style={{ fontSize: '12px', display: 'inline' }}>
               <LocationOnIcon />
@@ -711,6 +654,13 @@ import { Link } from 'react-router-dom';
 >
   Details
 </button>
+<button
+       className='btn-like' key={index} style={{cursor:"pointer"}} 
+       onClick={() => handleamenitiesOpen(index)}
+       aria-describedby={`popover-${index}`}
+>
+  Amenities
+</button>
               {/* <button
       className='btn'
       onClick={() => handlePopoverOpen(index)}
@@ -721,7 +671,7 @@ import { Link } from 'react-router-dom';
             </div>
           </div>
           <div className='col-12 col-md-4'>
-            <span><DoneIcon color='success'/>100% GST invoice</span><br/>
+            <span><DoneIcon color='success'/>Gst Status : {item.gst_status}</span><br/>
             <span><DoneIcon color='success'/>Free cancellation till {item.freecancellationuntil}</span><br/>
             <h5 className='mt-1'>₹{item.tariff}/night</h5>
             <button className='btn' onClick={toggleDrawer('right', true,index)}>Select Room</button>
@@ -741,6 +691,40 @@ import { Link } from 'react-router-dom';
     <p>{item.hoteldescription}</p>
   </DialogContent>
 </Dialog>
+{/* {item.amenities
+  .filter((amenity) => amenity === true)
+   */}
+    
+      <div key={index}>
+        
+        {/* Render additional JSX for each filtered amenity */}
+      
+    
+
+<Dialog
+  open={amenitiesOpen[index]}
+  onClose={() => handleaminitiesClose(index)}
+  fullWidth
+  maxWidth="xs"
+>
+  <DialogTitle className="border-bottom text-center">
+  Amenities List
+    <IconButton aria-label="close" onClick={() => handleaminitiesClose(index)} className="position-absolute end-0">
+      <CloseIcon />
+    </IconButton>
+  </DialogTitle>
+  <DialogContent>
+  {Object.keys(item.amenities).map((key, index) => {
+      if (item.amenities[key]) {
+        return <li key={index}>{key}</li>;
+      }
+      return null;
+    })}
+  </DialogContent>
+</Dialog>
+</div>
+{/* ); */}
+
 
         
       
@@ -752,12 +736,12 @@ import { Link } from 'react-router-dom';
   
   
   
+  );
+}
+}
 
-  )
-          }
-          return null;
-          })
-         }
+return null; // Return null if the condition is not met to skip rendering
+})}
            
             
           </div>
@@ -777,6 +761,7 @@ import { Link } from 'react-router-dom';
           </div>
    
     </Drawer> */}
+    {roomapilist.map((item, index) => (
     <Drawer
         anchor={isMobile ? 'bottom' : 'right'}
         open={state['right']}
@@ -785,7 +770,7 @@ import { Link } from 'react-router-dom';
       >
 
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 2,backgroundColor:'#7862dc'}}>
-          <Typography variant="h6" color={"#fff"}>Hotel Sam Residency</Typography>
+          <Typography variant="h6" color={"#fff"}>{item.hotelname}</Typography>
           <IconButton onClick={toggleDrawer('right', false)}>
             <CloseIcon htmlColor={'#fff'} />
           </IconButton>
@@ -801,7 +786,7 @@ import { Link } from 'react-router-dom';
   </TableHead>
   <TableBody>
     <TableRow>
-      <TableCell>Hotel Sam Residency</TableCell>    
+      <TableCell>{item.hotelname}</TableCell>    
       <TableCell>2</TableCell>
       <TableCell>09 Jun - 10 Jun</TableCell>
     </TableRow>
@@ -811,55 +796,111 @@ import { Link } from 'react-router-dom';
 
      <div className='row justify-content-center'>
       <div className='col-8'>
-        <Card >
-          <CardContent>
-      <Carousel
+        {/* <Card >
+          <CardContent> */}
+      {/* <Carousel
       showThumbs={false}
       infiniteLoop
       swipeable={false}
       showIndicators={false}
       autoFocus={true}
        
-     >
-       {roomapilist.map((item, index) => (
+     > */}
+       
         <>
-     <Typography variant="h5" component="div" sx={{background:"rgba(216, 216, 216, 0.2)",p:3}}>
-          {item.title}
+        
+        {
+        item.room_type.map((roomtype, index) => (
+        
+            
+         <> 
+         <Card>
+          <CardContent>
+     <Typography  variant="h5" component="div" sx={{background:"rgba(216, 216, 216, 0.2)",p:3}}>
+          {roomtype.name}
         </Typography>
-        <div className = 'row'>
-        <div className='col-6'>
-        <Typography className = 'mt-3' >
-          Room only
-        </Typography>
-        </div>
-        <div className='col-6'>
-        <Typography className='mt-3' variant="body1">
-         {item.description}
-        </Typography>
-        </div>
-        </div>
-        <div className = 'row'>
-          <div className = 'col-6'>
-          <Link
-         component="button"
-          variant="body2"
-          onClick={() => {
-            console.info("I'm a button.");
-          }}
-          className="text-decoration-none"
+        <div className = 'row mt-3'>
+
+    
+        <div className='col-6 text-center'>
+       
+          <img
+    className='mx-auto d-block '
+    src={roomtype.room_image}
+    style={{ maxHeight: "150px", objectFit: "cover" }}
+    alt="Image 1"
+  />
+          
+ 
+        {/* ))} */}
+</div>
+
+<div className='col-6'>
+<Typography
+        aria-owns={open ? 'mouse-over-popover' : undefined}
+        aria-haspopup="true"
+        onMouseEnter={handlePopoverOpen1}
+        onMouseLeave={handlePopoverClose1}
+      >
+       Cancellation Policy
+      </Typography>
+      {/* <Popover className='mt-2'
+        id="mouse-over-popover"
+        sx={{
+          pointerEvents: 'none',
+          width: 1000,
+          height:500
+        }}
+        open={open1}
+        anchorEl={anchorEl}
+        anchorOrigin={{
+          vertical: 'center', // Updated to 'top'
+          horizontal: 'center',
+        }}
+        transformOrigin={{
+          vertical: 'center', // Updated to 'bottom'
+          horizontal: 'bottom',
+        }}
+        onClose={handlePopoverClose1}
+        disableRestoreFocus>
+
+      <Typography sx={{ p: 1 }}>{roomtype.cancellation_policy.replace(/<[^>]+>/g,'')}</Typography>
+      </Popover> */}
+<Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel1a-content"
+          id="panel1a-header"
         >
-        View cancellation policy 
-        </Link>
-          </div>
-          <div className='col-6'>
-          <button className='btn' onClick={onButtonClick}>{select}</button>
-          </div>
+          <Typography>View cancellation policy</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          {/* <Typography> */}
+            {roomtype.cancellation_policy.replace(/<[^>]+>/g,'')}
+          {/* </Typography> */}
+         
+          
+          
+        </AccordionDetails>
+      </Accordion>
+      <br/>
+      <button className='btn' onClick={onButtonClick}>{select}</button>
+    
+</div>
+
+
         </div>
+       
+        </CardContent>
+     
+        </Card>
         </>
-       ))}
-    </Carousel>
-    </CardContent>
-    </Card>
+         ))} 
+        </>
+       
+    {/* </Carousel> */}
+    {/* </CardContent>
+    </Card> */}
             </div>
             </div>
     <Divider className='mt-4'></Divider>
@@ -937,6 +978,7 @@ import { Link } from 'react-router-dom';
     </div>
 
 </Drawer>   
+))}
 
 
     
