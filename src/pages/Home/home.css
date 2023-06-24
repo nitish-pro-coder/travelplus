@@ -177,6 +177,10 @@
   font-weight: 600;
 }
 
+input[type="number"]:hover::-webkit-outer-spin-button,input[type="number"]:hover::-webkit-inner-spin-button{
+  display: none;
+}
+
 
 
 @media screen and (min-width: 480px) {

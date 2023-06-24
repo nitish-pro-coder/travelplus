@@ -9,7 +9,7 @@ import Card from '@mui/material/Card';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import axios from 'axios';
-import { Box, Button, CardContent, Checkbox, Divider, FormGroup, Popover, Rating, Skeleton, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
+import { Box, Button, CardContent, Checkbox, DialogContentText, Divider, FormGroup, Popover, Rating, Skeleton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 // import { Box, Button,  CardContent, Checkbox, Divider, Popover, Rating, Skeleton, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
 import Slider from '@mui/material/Slider';
 import Popular from '../Popular/Popular';
@@ -84,12 +84,13 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
     right: false,
   });
   const [select,setSelect] = React.useState('Select');
+  const [trdetopen,settrdetopen]=React.useState(false);
 
   
   const handleSelect = (event, value) => {
     setSelectedLocation(value);
     console.log(value)
-    setlocation([{locationname:value.display_name,lat:value.lat,lon:value.lon}])
+    setlocation([{locationname:value?.display_name,lat:value?.lat,lon:value?.lon}])
   };
 
   const calculateDistance = () => {
@@ -188,8 +189,8 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
     var data = {
       "hotelid": hotelapilist[index]?.hotelid,
       "hotelcode":hotelapilist[index]?.hotelcode,
-      "checkin": "2023-10-05",
-      "checkout": "2023-10-10",
+      "checkin": checkInDate,
+      "checkout":checkOutDate,
       
       "expected_checkin_time": "12:00",
       "expected_checkout_time": "12:00",
@@ -257,10 +258,16 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
   const handleClickOpen = () => {
     sethoteldetailsopen(true);
   };
+  const handletrdetopenOpen = () => {
+    settrdetopen(true);
+  };
 
   const handleClose = () => {
     sethoteldetailsopen(false);
   };
+  const handletrdetclose =()=>{
+    settrdetopen(false)
+  }
   
 
   const onButtonClick = () =>{
@@ -313,6 +320,42 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
   const handlePopoverClose1 = () => {
     setAnchorEl(null);
   };
+  const checkInDateRef = React.useRef(null);
+  const checkOutDateRef = React.useRef(null);
+  const [currentDate, setCurrentDate] = React.useState('');
+  useEffect(() => {
+    const today = new Date();
+    const year = today.getFullYear();
+    let month = today.getMonth() + 1;
+    let day = today.getDate();
+  
+    if (month < 10) {
+      month = '0' + month;
+    }
+    if (day < 10) {
+      day = '0' + day;
+    }
+  
+    const formattedDate = `${year}-${month}-${day}`;
+    setCheckInDate(formattedDate)
+    setCheckOutDate(formattedDate)
+  }, []);
+  const [checkInDate, setCheckInDate] = React.useState('');
+const [checkOutDate, setCheckOutDate] = React.useState('');
+  
+  const handleCheckInDateChange = (event) => {
+    checkOutDateRef.current.focus();
+    console.log(event.target.value);
+    const selectedDate = event.target.value;
+    setCheckInDate(selectedDate);
+  setCheckOutDate(selectedDate);
+  };
+
+  const handleCheckOutDateChange = (event) => {
+    const selectedDate = event.target.value;
+    
+  setCheckOutDate(selectedDate);
+  };
 
   const open1 = Boolean(anchorEl);
    return (
@@ -331,31 +374,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
         </div>
         
         <div  className="homeCard grid">
-        <div data-aos="fade-right" data-aos-duration="2000" className="locationDiv">
-              <label htmlFor="name">Traveller's Name</label>
-              <input type="text" placeholder='Name'/>
-           </div>
-           <div className="datePickerContain locationDiv" >
-           <label htmlFor="CheckIn">Check-In - Check-Out Date</label>
-        <input
-          type="text"
-          placeholder="Select Dates"
-          onClick={handleToggleDateRangePicker}
-          readOnly
-          data-aos="fade-right" data-aos-duration="2000"
-          
-        />
-        {showDateRangePicker && (
-          <div className="datePickerOverlay">
-            <DateRange
-              ranges={dateRange}
-              onChange={handleRangeChange}
-              moveRangeOnFirstSelection={false}
-            />
-          </div>
-        )}
-      </div>
-           <div data-aos="fade-right" data-aos-duration="2000" className="locationDiv">
+        <div data-aos="fade-right" data-aos-duration="2000" >
               <label htmlFor="location">Location</label>
               
               <Autocomplete
@@ -376,10 +395,10 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
       then((response)=>{
         console.log(response.data)
         response.data.map((item)=>{
-          console.log(item.display_name)
+          
           console.log(locationlist)
           const updatedList = response.data.map((item) => ({
-          display_name: item.display_name,
+          display_name: item?.display_name,
           lat: item.lat,
           lon: item.lon,
           }))
@@ -402,12 +421,96 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
   } />}/>
               
            </div>
-           <div data-aos="fade-right" data-aos-duration="2500" className="distDiv">
+           <div data-aos="fade-right" data-aos-duration="2500">
+    <TextField
+      id="check-in-date"
+      label="Check-In Date"
+      type="date"
+      value={checkInDate}
+      fullWidth
+      
+      inputProps={{
+        min: currentDate,
+      }}
+      onChange={handleCheckInDateChange}
+      inputRef={checkInDateRef}
+    />
+  </div>
+  <div data-aos="fade-right" data-aos-duration="2500">
+    <TextField
+      id="check-out-date"
+      label="Check-Out Date"
+      type="date"
+      value={checkOutDate}
+      onChange={handleCheckOutDateChange}
+      fullWidth
+      inputRef={checkOutDateRef}
+    />
+  </div>
+
+<Dialog open={trdetopen} onClose={handletrdetclose}>
+<DialogTitle>
+    Traveler Details
+    <IconButton
+      edge="end"
+      color="inherit"
+      onClick={handletrdetclose}
+      aria-label="close"
+      className='float-end'
+      >
+     
+      <CloseIcon />
+    </IconButton>
+  </DialogTitle>
+        <DialogContent>
+          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+            <TextField
+              margin="dense"
+              
+              label="Traveler Name"
+              type="text"
+              fullWidth
+              variant="outlined"
+              required // Added required attribute
+   
+            />
+            <TextField
+              margin="dense"
+              
+              label="Mobileno"
+              type="number"
+              fullWidth
+              variant="outlined"
+              required // Added required attribute
+              inputProps={{
+                inputMode: 'numeric',
+              }}
+            />
+            <TextField
+              margin="dense"
+              id="gstin"
+              label="Email"
+              type="email"
+              fullWidth
+              variant="outlined"
+              required // Added required attribute
+            />
+           
+          </Box>
+        </DialogContent>
+      </Dialog>
+          
+                     
+           
+           {/* <div data-aos="fade-right" data-aos-duration="2500">
               <label htmlFor="distance">Distance</label>
-              <input type="text" placeholder='1 Kms'/>
-             
-           </div>
-           <div data-aos="fade-right" data-aos-duration="3000" className="priceDiv">
+              <TextField id="standard-basic" variant="standard" />
+           </div> */}
+           <div data-aos="fade-right" data-aos-duration="2000">
+              <label htmlFor="name">Traveler Details</label>
+              <TextField id="standard-basic" variant="standard" readOnly="true" onClick={handletrdetopenOpen} />
+        </div>
+           <div data-aos="fade-right" data-aos-duration="3000">
               <label htmlFor="price">Price Range</label>
               {/* <input type="text" placeholder='$100-$500'/> */}
               
@@ -766,7 +869,7 @@ return null; // Return null if the condition is not met to skip rendering
         anchor={isMobile ? 'bottom' : 'right'}
         open={state['right']}
         onClose={toggleDrawer('right', false)}
-        PaperProps={{ style: { width: 1000 } }}
+        PaperProps={{ style: { width: "80%" } }}
       >
 
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 2,backgroundColor:'#7862dc'}}>
@@ -794,8 +897,8 @@ return null; // Return null if the condition is not met to skip rendering
     </TableBody>
     </Table>
 
-     <div className='row justify-content-center'>
-      <div className='col-8'>
+     <div className='row mt-3'>
+      <div className='col-6'>
         {/* <Card >
           <CardContent> */}
       {/* <Carousel
@@ -812,65 +915,58 @@ return null; // Return null if the condition is not met to skip rendering
         {
         item.room_type.map((roomtype, index) => (
         
-            
-         <> 
-         <Card>
+            <>
+         <Card className='mb-3'>
           <CardContent>
      <Typography  variant="h5" component="div" sx={{background:"rgba(216, 216, 216, 0.2)",p:3}}>
           {roomtype.name}
         </Typography>
-        <div className = 'row mt-3'>
-
-    
-        <div className='col-6 text-center'>
-       
-          <img
-    className='mx-auto d-block '
-    src={roomtype.room_image}
-    style={{ maxHeight: "150px", objectFit: "cover" }}
-    alt="Image 1"
-  />
-          
- 
-        {/* ))} */}
+        <div className='row mt-3'>
+  <div className='col-6'>
+    <img
+      className='mx-auto d-block'
+      src={roomtype.room_image}
+      style={{ maxHeight: "150px", objectFit: "cover",maxWidth: "50%" }}
+      alt="Image 1"
+    />
+  </div>
+  <div className='col-6'>
+  <TableContainer>
+      <Table className="table table-bordered">
+        <TableHead>
+          <TableRow>
+            <TableCell>Tariff</TableCell>
+            <TableCell>Meal Plan</TableCell>
+            <TableCell>Inclusion</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          <TableRow>
+            <TableCell>{roomtype.tariff}</TableCell>
+            <TableCell>{roomtype.mealplan}</TableCell>
+            <TableCell>{roomtype.inclusion}</TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
+    </TableContainer>
+  </div>
 </div>
 
-<div className='col-6'>
-<Typography
-        aria-owns={open ? 'mouse-over-popover' : undefined}
-        aria-haspopup="true"
-        onMouseEnter={handlePopoverOpen1}
-        onMouseLeave={handlePopoverClose1}
-      >
-       Cancellation Policy
-      </Typography>
-      {/* <Popover className='mt-2'
-        id="mouse-over-popover"
-        sx={{
-          pointerEvents: 'none',
-          width: 1000,
-          height:500
-        }}
-        open={open1}
-        anchorEl={anchorEl}
-        anchorOrigin={{
-          vertical: 'center', // Updated to 'top'
-          horizontal: 'center',
-        }}
-        transformOrigin={{
-          vertical: 'center', // Updated to 'bottom'
-          horizontal: 'bottom',
-        }}
-        onClose={handlePopoverClose1}
-        disableRestoreFocus>
 
-      <Typography sx={{ p: 1 }}>{roomtype.cancellation_policy.replace(/<[^>]+>/g,'')}</Typography>
-      </Popover> */}
-<Accordion>
+
+
+
+
+      
+       
+      <div className='row mt-3'>
+        <div className='col-8'>
+        <Accordion sx={{width:'350px'}}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1a-content"
           id="panel1a-header"
+          
         >
           <Typography>View cancellation policy</Typography>
         </AccordionSummary>
@@ -883,18 +979,20 @@ return null; // Return null if the condition is not met to skip rendering
           
         </AccordionDetails>
       </Accordion>
-      <br/>
-      <button className='btn' onClick={onButtonClick}>{select}</button>
-    
-</div>
-
-
+          </div>
+          <div className='col-4'>
+          <button className='btn' onClick={onButtonClick}>{select}</button>
+          </div>
         </div>
+
+
+        
        
         </CardContent>
      
         </Card>
         </>
+       
          ))} 
         </>
        
@@ -902,10 +1000,8 @@ return null; // Return null if the condition is not met to skip rendering
     {/* </CardContent>
     </Card> */}
             </div>
-            </div>
-    <Divider className='mt-4'></Divider>
-    <div className='row justify-content-center mt-3'>
-      <div className='col-8'>
+            
+      <div className='col-6'>
     <Card >
      <CardContent>
    <h4>Price Breakup</h4>
@@ -974,8 +1070,11 @@ return null; // Return null if the condition is not met to skip rendering
        </div>
     </CardContent>
     </Card>
+   
     </div>
-    </div>
+            </div>
+    <Divider className='mt-4'></Divider>
+    
 
 </Drawer>   
 ))}

@@ -8,6 +8,8 @@ function Login() {
   const [showOtpField, setShowOtpField] = useState(false);
   const [email, setEmail] = useState('');
   const [otp, setOtp] = useState('');
+  const [clientname, setClientname] = useState('');
+  const [documentid,setdocumentid]=useState('')
 
   const navigate= useNavigate()
 
@@ -22,17 +24,17 @@ function Login() {
   };
 
   const handleLoginSubmit = (event) => {
-    // Perform login logic here
-    console.log("gnhgbgbv ")
+    
     
       const data = {
         otp: otp,
-        Userid: 1
+        id:documentid
       };
 
       axios.post('http://localhost:3000/api/otpverification/', data)
         .then(response => {
           // Handle successful response
+          console.log(response)
           setIsSignUpMode(false);
           console.log(response.data);
           if(response.data=="Valid OTP")
@@ -60,9 +62,18 @@ function Login() {
   };
 
   const sendmail=() =>{
+    axios.post('http://localhost:3000/api/employeedetails/',{"email":email}).then(res=>{
+      console.log(res.data)
+      if(res.data.message == "Email matched successfully")
+      {
+        setClientname(res.data.data[0].clientname); 
+        setdocumentid(res.data.data[0].id);
 
-    axios.post('http://localhost:3000/api/sendmail/', {"mailid":email})
+
+        axios.post('http://localhost:3000/api/sendmail/',{"mailid":email,"id":res.data.data[0].id})
       .then(response => {
+        setShowOtpField(true);
+        setIsSignUpMode(false);
         // Handle successful response
         console.log(response.data);
       })
@@ -70,6 +81,13 @@ function Login() {
         // Handle error
         console.error(error);
       });
+      }
+    }).catch(err=>{
+       console.log(err);
+    })
+
+    
+
   }
 
   return (
@@ -77,7 +95,7 @@ function Login() {
       <div className="forms-container">
         <div className="signin-signup">
           {!showOtpField ? (
-            <form action="#" className="sign-in-form" onSubmit={handleLoginSubmit}>
+            <form action="#" className="sign-in-form" >
               <h2 className="title">Let's Go!</h2>
               {!showOtpField && (
                 <div className="input-field">
@@ -85,7 +103,7 @@ function Login() {
                   <input type="email" placeholder="Email" value={email} onChange={handleEmailChange} />
                 </div>
               )}
-              <input type="submit" value="Login" className="btn1 solid" onClick={sendmail}  />
+              <input type='button' value="Login" className="btn1 solid" onClick={sendmail}  />
             </form>
           ) : (
             <form action="#" className="sign-in-form">
