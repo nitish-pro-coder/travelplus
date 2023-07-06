@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import './login.css';
 import axios from 'axios';
 import { Navigate, useNavigate } from 'react-router-dom';
+import Loader from '../../components/Loader/loader';
+import { Box, CircularProgress } from '@mui/material';
 
 function Login() {
   const [isSignUpMode, setIsSignUpMode] = useState(false);
@@ -10,6 +12,7 @@ function Login() {
   const [otp, setOtp] = useState('');
   const [clientname, setClientname] = useState('');
   const [documentid,setdocumentid]=useState('')
+  const [loading, setLoading] = useState(false);
 
   const navigate= useNavigate()
 
@@ -24,7 +27,7 @@ function Login() {
   };
 
   const handleLoginSubmit = (event) => {
-    
+    console.log(event.target)
     
       const data = {
         otp: otp,
@@ -39,7 +42,7 @@ function Login() {
           console.log(response.data);
           if(response.data=="Valid OTP")
           {
-            navigate('/')
+            navigate('/Book-now')
           }
           
         })
@@ -61,19 +64,26 @@ function Login() {
     setOtp(event.target.value);
   };
 
-  const sendmail=() =>{
+  const sendmail=(event) =>{
+    console.log(event.target)
+    setLoading(true);
     axios.post('http://localhost:3000/api/employeedetails/',{"email":email}).then(res=>{
       console.log(res.data)
+      setIsSignUpMode(false);
       if(res.data.message == "Email matched successfully")
       {
         setClientname(res.data.data[0].clientname); 
         setdocumentid(res.data.data[0].id);
-
-
+       
+        //  if(res.data.data[0].clientname)
+        //  {
+        //  }
         axios.post('http://localhost:3000/api/sendmail/',{"mailid":email,"id":res.data.data[0].id})
       .then(response => {
         setShowOtpField(true);
-        setIsSignUpMode(false);
+       
+        setLoading(false);
+      
         // Handle successful response
         console.log(response.data);
       })
@@ -91,11 +101,23 @@ function Login() {
   }
 
   return (
+    <>
+   
     <div className={`container1 ${isSignUpMode ? 'sign-up-mode' : ''}`}>
+    
       <div className="forms-container">
+      {loading && 
+              <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+               <CircularProgress />
+            </Box>
+    }
         <div className="signin-signup">
-          {!showOtpField ? (
-            <form action="#" className="sign-in-form" >
+       
+          {!showOtpField ?
+          (
+            <>
+             
+            <form  className="sign-in-form" >
               <h2 className="title">Let's Go!</h2>
               {!showOtpField && (
                 <div className="input-field">
@@ -105,7 +127,11 @@ function Login() {
               )}
               <input type='button' value="Login" className="btn1 solid" onClick={sendmail}  />
             </form>
+            
+           
+           </> 
           ) : (
+
             <form action="#" className="sign-in-form">
               <h2 className="title">Enter OTP</h2>
               <div className="input-field">
@@ -129,6 +155,8 @@ function Login() {
           </form>
         </div>
       </div>
+ 
+ 
 
       <div className="panels-container">
         <div className="panel left-panel">
@@ -151,6 +179,8 @@ function Login() {
         </div>
       </div>
     </div>
+  
+    </>
   );
 }
 

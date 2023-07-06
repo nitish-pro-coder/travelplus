@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React, {useContext, useEffect} from 'react'
 import './home.css'
 import Aos from 'aos'
 import 'aos/dist/aos.css'
@@ -9,12 +9,12 @@ import Card from '@mui/material/Card';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import axios from 'axios';
-import { Box, Button, CardContent, Checkbox, DialogContentText, Divider, FormGroup, Popover, Rating, Skeleton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import { Box, Button, CardContent, Checkbox, Chip, DialogContentText, Divider, FormGroup, MenuItem, Popover, Rating, Select, Skeleton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 // import { Box, Button,  CardContent, Checkbox, Divider, Popover, Rating, Skeleton, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
 import Slider from '@mui/material/Slider';
 import Popular from '../Popular/Popular';
 import Navbar from '../../components/Navbar/Navbar';
-import { CheckBox, NearMe } from '@mui/icons-material';
+import { CheckBox, NearMe, RemoveCircle } from '@mui/icons-material';
 import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
@@ -43,12 +43,13 @@ import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-
-
-
+import {BookingContext} from '../../Context/BookingContextProvider'
+import { add } from 'date-fns';
+import { GridAddIcon } from '@mui/x-data-grid';
 
  const Home = () => {
   const [open, setOpen] = React.useState(false);
+  const {Initialbookingdetails,addtobookingsearch,Addtorecentsearch,}= useContext(BookingContext)
   function valuetext(value) {
     return value;
   }
@@ -72,10 +73,6 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
     const [loadingsearch,setloadingsearch]=React.useState(false);
     const [hotelapilist,sethotelapilist]=React.useState([])
     const [roomapilist,setroomapilist]=React.useState([])
-
-    const handleToggleDateRangePicker = () => {
-      setShowDateRangePicker((prevState) => !prevState);
-    };
     const [locationlist,setlocationlist]=React.useState([])
   const [location,setlocation]=React.useState([{locationname:"",lat:"",lon:""}])
   const [selectedLocation, setSelectedLocation] = React.useState(null);
@@ -85,79 +82,83 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
   });
   const [select,setSelect] = React.useState('Select');
   const [trdetopen,settrdetopen]=React.useState(false);
+  const [recentsearcharr,setrecentsearcharr]=React.useState([]);
+  const [roomrequest,setroomrequest]=React.useState();
+  const [hotelrequest,sethotelrequest]=React.useState();
+  const [selectedroom,setselectedroom] = React.useState();
+
 
   
   const handleSelect = (event, value) => {
     setSelectedLocation(value);
     console.log(value)
+    
+
     setlocation([{locationname:value?.display_name,lat:value?.lat,lon:value?.lon}])
   };
 
-  const calculateDistance = () => {
-    const userLat = selectedLocation.lat;
-    const userLon = selectedLocation.lon;
-    const propertyLat = 10.2381136;
-    const propertyLon = 77.48918219999996;
-
-    // Calculate the distance using Haversine formula
-    const earthRadius = 6371; // in kilometers
-    const latDiff = (propertyLat - userLat) * (Math.PI / 180);
-    const lonDiff = (propertyLon - userLon) * (Math.PI / 180);
-    const a =
-      Math.sin(latDiff / 2) * Math.sin(latDiff / 2) +
-      Math.cos(userLat * (Math.PI / 180)) *
-      Math.cos(propertyLat * (Math.PI / 180)) *
-      Math.sin(lonDiff / 2) *
-      Math.sin(lonDiff / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    const distance = earthRadius * c;
-  console.log(distance.toFixed(2));
-  };
-  const [value, setValue] = React.useState([0, 5000]); // Set initial range values
+ 
+  const [value, setValue] = React.useState([100, 5000]); // Set initial range values
 
   const handleChange = (event, newValue) => {
     console.log(newValue)
     setValue(newValue);
   };
   const GST=[];
-  console.log(value[0])
-  const Showrecentsearch=()=>{  
+  
+  const Showrecentsearch=()=>{
+    
+
+    axios.post('http://localhost:3000/api/Citylist/',{Cityname:selectedLocation}).
+    then((res)=>{console.log(res.data)})
+    .catch((err)=>{console.log(err)})
+    console.log(Initialbookingdetails)
+    // addtobookingsearch([
+    //   {
+    //     locationname:"Lsdjfsbfwqeqeiosdjg"||Initialbookingdetails?.locationname
+    //   }])
+      console.log(Initialbookingdetails)
+
+      // if(selectedLocation!==""){
+           
+      // }
+    addtobookingsearch([])
     setrecentsearch(false)
     setloadingsearch(true)
-    console.log(location)
-    var data = {
-      checkin: "2023-08-10",
-      checkout: "2023-08-18",
-      expected_checkin_time: "13:00",
-      expected_checkout_time: "11:59",
-      latitude: location[0]?.lat,
-      longitude: location[0]?.lon,
-      room_config: "A,A",
-      // grade: "HS1",
-      payment_mode: "Pay at Hotel",
-      radius: 15,
-      min:100,
-      max: value[1]
-    };
+//     console.log(location)
+//     var data = {
+//       checkin: checkInDate,
+//       checkout: checkOutDate,
+//       expected_checkin_time: "13:00",
+//       expected_checkout_time: "11:59",
+//       latitude: location[0]?.lat,
+//       longitude: location[0]?.lon,
+//       room_config: "A,A,A,A",
+//       // grade: "HS1",
+//       payment_mode: "Pay at Hotel",
+//       radius: 15,
+//       min:100,
+//       max: value[1]
+//     };
     
-    var config = {
-      method: 'post',
-      url: 'https://developers.hummingbirdindia.com/api/v2.2/hotelavailability',
-      headers: { 
-        'Authorization': 'FA31C4183B624FF6A70D776420B49B41',
-        'Content-Type': 'application/json', 
-        'Accept': 'application/json'
-      },
-      data : data
-    }
-    axios(config)
-.then(response=> {
-  console.log(response.data.data);
-  sethotelapilist(response.data.data);
-})
-.catch(error=> {
-  console.log(error);
-});
+//     var config = {
+//       method: 'post',
+//       url: 'https://developers.hummingbirdindia.com/api/v2.2/hotelavailability',
+//       headers: { 
+//         'Authorization': 'FA31C4183B624FF6A70D776420B49B41',
+//         'Content-Type': 'application/json', 
+//         'Accept': 'application/json'
+//       },
+//       data : data
+//     }
+//     axios(config)
+// .then(response=> {
+//   console.log(response.data.data);
+//   sethotelapilist(response.data.data);
+// })
+// .catch(error=> {
+//   console.log(error);
+// });
     
     setTimeout(() => {
       setloadingsearch(false)
@@ -184,20 +185,20 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
   };
   const [isOpen, setIsOpen] = React.useState(false);
 
-  const toggleDrawer = (anchor, open,index) => (event) => {
-    
-    var data = {
+  const toggleDrawer = (anchor, open,index,item) => (event) => {
+    console.log(item)
+    sethotelrequest(item)
+    var roomdata = {
       "hotelid": hotelapilist[index]?.hotelid,
       "hotelcode":hotelapilist[index]?.hotelcode,
       "checkin": checkInDate,
-      "checkout":checkOutDate,
-      
+      "checkout":checkOutDate, 
       "expected_checkin_time": "12:00",
       "expected_checkout_time": "12:00",
-      "room_config": "A,A",
+      room_config: "A",
       "grade": "HS1"
     }
-    
+    setroomrequest(roomdata);
     var config = {
       method: 'post',
       url: 'https://developers.hummingbirdindia.com/api/v2.2/roomavailability',
@@ -206,11 +207,10 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
         'Content-Type': 'application/json', 
         'Accept': 'application/json'
       },
-      data : data
+      data : roomdata
     }
     axios(config)
 .then(response=> {
-  
   console.log(response.data.data);
   setroomapilist(response.data.data);
 })
@@ -253,7 +253,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
   const [hoteldetailsopen,sethoteldetailsopen]=React.useState(false);
   let tempElement = document.createElement("div");
   let textContent = tempElement.textContent;
-  console.log(textContent)
+  
 
   const handleClickOpen = () => {
     sethoteldetailsopen(true);
@@ -270,8 +270,13 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
   }
   
 
-  const onButtonClick = () =>{
-    setSelect('Selected');
+  const onButtonClick = (ind) =>{
+    console.log(ind)
+    console.log(roomapilist[0].room_type[ind])
+    console.log(roomapilist)
+    console.log(selectedroom)
+    setselectedroom(roomapilist[0].room_type[ind])
+    
   }
   const [popoverOpen, setPopoverOpen] = React.useState(Array(hotelapilist.length).fill(false));
   const [amenitiesOpen, setamenitiesOpen] = React.useState(Array(hotelapilist.length).fill(false));
@@ -297,20 +302,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
     setamenitiesOpen(updatedPopoverOpen);
   };
  
-  React.useEffect(() => { 
-    console.log(checked);
-    const item = {
-      amenities: [true, false, true, false, true, true]
-    };
-    
-    // const filteredAmenities = item.amenities.filter(amenity => amenity === true);
-    // const amenitiesList = filteredAmenities.map(amenity => amenity.toString());
-    
-    // console.log(amenitiesList);
-    
-    
-    
-  },[checked])
+  
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handlePopoverOpen1 = (event) => {
@@ -324,6 +316,8 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
   const checkOutDateRef = React.useRef(null);
   const [currentDate, setCurrentDate] = React.useState('');
   useEffect(() => {
+    
+   
     const today = new Date();
     const year = today.getFullYear();
     let month = today.getMonth() + 1;
@@ -353,11 +347,216 @@ const [checkOutDate, setCheckOutDate] = React.useState('');
 
   const handleCheckOutDateChange = (event) => {
     const selectedDate = event.target.value;
+    console.log(selectedDate)
     
   setCheckOutDate(selectedDate);
   };
 
+  const handleBackdropClick = (event) => {
+    //these fail to keep the modal open
+    event.stopPropagation();
+    return false;
+  };
+
+  const BookingConfirmation=(ind)=>{
+    // console.log(roomrequest)
+    
+    console.log(selectedroom)
+    console.log(roomrequest)
+    // Create three objects
+const object1 = 
+{
+  BookingId:"",
+  Booking_status:"Booked",
+  Check_In_Date:"",
+  Check_Out_Date:"",
+  Client_name:"",
+  City:"",
+  City_Id:"",
+  StateId:"",
+  State:"",
+  Expected_CheckIn_Time:"",
+  Expected_CheckOut_TIme:"",
+  CreatedDate:"",
+  MOdifiedDate: "",
+}
+const object2 = {
+  Id:0,
+  Traveler_name:"Guru",
+  BookingId:"",
+  CreatedDate: "",
+  MOdifiedDate: "",
+};
+const object3 = {
+  Id:0,
+  HotelId:roomrequest?.hotelid,
+  Hotel_Name:hotelrequest.hotelname,
+  Hotel_Amenities:hotelrequest.amenities,
+  CreatedDate: "",
+  MOdifiedDate: "",
+};
+
+// Create a new object to hold the three objects
+const combinedObject = { objects: [object1,object2,object3] };
+console.log(combinedObject);
+// axios.post('https://developers.hummingbirdindia.com/api/v2.2/hotelbooking',{})
+// .then(response=> {
+//   console.log(response);
+// })
+// .catch(error=> {
+//   console.log(error)
+// })
+
+    
+    // var data = 
+    //   {
+    //     "hotelid":  roomrequest?.hotelid,
+    //     "checkin": checkInDate,
+    //     "checkout": checkOutDate,
+    //     "expected_checkin_time": "12:00",
+    //     "expected_checkout_time": "11:59",
+    //     "room_type_code": selectedroom?.room_type_code,
+    //     "rate_plan_code": selectedroom?.rate_plan_code,
+    //     "booker_name": "Nitish",
+    //     "booker_email": "nitish@warblerit.com",
+    //     "client_requestno": "XYZ",
+    //     "room_config": roomrequest?.room_config,
+    //     "tariff": selectedroom?.tariff.toString(),
+    //     "room1": [
+    //       {
+    //         "emp_code": "EMP1082",
+    //         "title": "Mr",
+    //         "first_name": "XXXX",
+    //         "last_name": "YYYY",
+    //         "mobile_no": "123456789",
+    //         "email": "xxxxx@yyy.com",
+    //         "designation": "Manager",
+    //         "grade": "Manager",
+    //         "column1": "Test Data 1",
+    //         "column2": "Test Data 2",
+    //         "column3": "Test Data 3",
+    //         "column4": "Test Data 4",
+    //         "column5": "Test Data 5",
+    //         "column6": "Test Data 6",
+    //         "column7": "Test Data 1",
+    //         "column8": "Test Data 8",
+    //         "column9": "Test Data 9",
+    //         "column10": "Test Data 10"
+    //       }
+    //     ]
+        
+      
+    // };
+    
+
+    // console.log(data)
+    // console.log(hotelapilist[index]?.hotelid)
+    
+//     var config = {
+//       method: 'post',
+//       url: 'https://developers.hummingbirdindia.com/api/v2.2/hotelavailability',
+//       headers: { 
+//         'Authorization': 'FA31C4183B624FF6A70D776420B49B41',
+//         'Content-Type': 'application/json', 
+//         'Accept': 'application/json'
+//       },
+//       data : data
+//     }
+//     axios(config)
+// .then(response=> {
+//   console.log(response.data.data);
+//   sethotelapilist(response.data.data);
+// })
+// .catch(error=> {
+//   console.log(error);
+// });
+    
+  }
   const open1 = Boolean(anchorEl);
+
+  const [selectedValue, setSelectedValue] = React.useState(0);
+  const [selectedtrvValue, setSelectedtrvValue] = React.useState(0);
+  const [isCardVisible, setIsCardVisible] = React.useState(false);
+  const [formattedChkInDate,setformattedChkInDate]=React.useState('');
+  const [formattedChkOutDate,setformattedChkOutDate]=React.useState('');
+
+  const handleIncrement = () => {
+    setSelectedValue((prevValue) =>prevValue < 4 ? prevValue + 1 : prevValue);
+  };
+  const handletrvIncrement = () => {
+    setSelectedtrvValue((prevValue) =>prevValue < 8 ? prevValue + 1 : prevValue);
+  };
+
+  const handleDecrement = () => {
+    setSelectedValue((prevValue) => (prevValue > 0 ? prevValue - 1 : prevValue));
+  };
+  const handletrvDecrement = () => {
+    setSelectedtrvValue((prevValue) => (prevValue > 0 ? prevValue - 1 : prevValue));
+    
+  };
+
+  const handleTextFieldClick = () => {
+    setIsCardVisible((prevState) => !prevState);
+  };
+
+  React.useEffect(() => { 
+    console.log(checked);
+    const item = {
+      amenities: [true, false, true, false, true, true]
+    };
+    
+    
+    const dateObj = new Date(checkInDate);
+    const dateObj1 = new Date(checkOutDate);
+
+    setformattedChkInDate(dateObj.toLocaleDateString('en-US', {
+  day: 'numeric',
+  month: 'short'
+}))
+
+  setformattedChkOutDate(dateObj1.toLocaleDateString('en-US', {
+  day: 'numeric',
+  month: 'short'
+}))
+
+console.log(selectedroom?.tariff != null || selectedroom?.tariff != ''||selectedroom?.tariff===undefined ? selectedroom?.tariff : "dgsdg")
+},[checked],[checkInDate],[checkOutDate],[selectedroom])
+
+useEffect(() => {
+  
+  console.log(recentsearcharr);
+}, []);
+
+
+const [chips, setChips] = React.useState([]);
+const [chipvisible, setchipvisible] = React.useState(false);
+const handleChipDelete = (chipToDelete) => () => {
+  setChips((prevChips) => prevChips.filter((chip) => chip !== chipToDelete));
+ 
+};
+
+const handleKeyDown = (event) => {
+  if (event.key === 'Enter' && event.target.value !== '') {
+    const newChip = event.target.value;
+    console.log(newChip)
+    if (chips.length < selectedtrvValue) {
+      setChips((prevChips) => [...prevChips, newChip]);
+      setchipvisible(false);
+    }
+    if (chips.length > selectedtrvValue) {
+      setchipvisible(true);
+    }
+    
+    
+    event.target.value = '';
+  }
+};
+
+const handleBlur = () => {
+ 
+  setIsCardVisible((prevState) => !prevState);
+};
+
    return (
     <>
     <Navbar/>
@@ -385,7 +584,6 @@ const [checkOutDate, setCheckOutDate] = React.useState('');
     onChange={handleSelect}
      value={selectedLocation}
     getOptionLabel={(option) =>`${option?.display_name}`}
-   
       renderInput={(params) => <TextField {...params}  
       variant="standard"
       onChange={(event) => { 
@@ -395,16 +593,14 @@ const [checkOutDate, setCheckOutDate] = React.useState('');
       then((response)=>{
         console.log(response.data)
         response.data.map((item)=>{
-          
           console.log(locationlist)
           const updatedList = response.data.map((item) => ({
           display_name: item?.display_name,
           lat: item.lat,
           lon: item.lon,
           }))
+          setrecentsearcharr([...recentsearcharr,updatedList])
           console.log(selectedLocation)
-         
-       
           setlocationlist(updatedList)
           setSelectedLocation(null);
           
@@ -417,8 +613,11 @@ const [checkOutDate, setCheckOutDate] = React.useState('');
     setSelectedLocation(null);
   }
 }
-  
-  } />}/>
+  } />}
+  PaperComponent={({ children }) => (
+    <div style={{ zIndex: 1500 /* Set your desired z-index value */, position: 'relative' }}>{children}</div>
+  )}
+  />
               
            </div>
            <div data-aos="fade-right" data-aos-duration="2500">
@@ -448,9 +647,9 @@ const [checkOutDate, setCheckOutDate] = React.useState('');
     />
   </div>
 
-<Dialog open={trdetopen} onClose={handletrdetclose}>
+<Dialog open={trdetopen} onClose={handletrdetclose}  onBackdropClick={handleBackdropClick} disableBackdropClick>
 <DialogTitle>
-    Traveler Details
+    No of Travelers
     <IconButton
       edge="end"
       color="inherit"
@@ -507,8 +706,52 @@ const [checkOutDate, setCheckOutDate] = React.useState('');
               <TextField id="standard-basic" variant="standard" />
            </div> */}
            <div data-aos="fade-right" data-aos-duration="2000">
-              <label htmlFor="name">Traveler Details</label>
-              <TextField id="standard-basic" variant="standard" readOnly="true" onClick={handletrdetopenOpen} />
+              <label htmlFor="name">Rooms and Travelers</label>
+              <div style={{ height: '50px' }}>
+              
+                <TextField id="standard-basic"  variant="standard" readOnly="true" value={
+    selectedValue !== "" ? "Rooms: " + selectedValue + " Travelers: " + selectedtrvValue : ""
+}
+ onClick={handleTextFieldClick} />
+              {/* </div> */}
+              
+              {isCardVisible && (  
+              <Card>
+               <CardContent>
+     
+      <div className="row">
+        <div className="col-5 mt-2">
+          <span>Rooms:</span>
+        </div>
+        <div className="col-7">
+      <IconButton onClick={handleDecrement}>
+        <RemoveCircle />
+      </IconButton>
+      <span>{selectedValue}</span>
+      <IconButton onClick={handleIncrement}>
+        <GridAddIcon />
+      </IconButton>
+       </div>
+       
+       </div>
+       <div className="row mt-3">
+        <div className="col-5 mt-2">
+          <span>Travelers:</span>
+        </div>
+        <div className="col-7">
+        <IconButton onClick={handletrvDecrement}>
+        <RemoveCircle />
+      </IconButton>
+      <span>{selectedtrvValue}</span>
+      <IconButton onClick={handletrvIncrement}>
+        <GridAddIcon />
+      </IconButton>
+       </div>
+       </div>
+       </CardContent> 
+      </Card>
+              )}
+              </div>
         </div>
            <div data-aos="fade-right" data-aos-duration="3000">
               <label htmlFor="price">Price Range</label>
@@ -525,11 +768,36 @@ const [checkOutDate, setCheckOutDate] = React.useState('');
             onChange={handleChange}
             valueLabelDisplay="auto"
             getAriaValueText={valuetext}
-            min={0} // Set the minimum value to 0
-            max={5000} // Set the maximum value to 8000
+            min={100} 
+            max={5000} 
           />
         </Box>
            </div>
+           <div data-aos="fade-right" data-aos-duration="2000">
+              <label htmlFor="name">Traveler Name</label>
+              <div style={{ height: '50px' }}>
+              <TextField
+      id="standard-basic"
+      variant="standard"
+      onKeyDown={handleKeyDown}
+      InputProps={{
+        readOnly: chipvisible,
+        startAdornment: (
+          <>
+            { chips.map((chip) => (
+              <Chip
+                key={chip}
+                label={chip}
+                onDelete={handleChipDelete(chip)}
+                style={{ margin: '2px' }}
+              />
+            ))}
+          </>
+        ),
+      }}
+    />
+              </div>
+        </div>
            <button data-aos="fade-left" data-aos-duration="3500" className='btn' onClick={Showrecentsearch}>Search</button>
         </div>
        
@@ -537,7 +805,7 @@ const [checkOutDate, setCheckOutDate] = React.useState('');
       </div>
   
     </section>
-    <Popular recentsearch={recentsearch}/>
+    <Popular recentsearch={recentsearch} recentsearcharr={recentsearcharr}/>
     {/* <Loadingscreen/> */}
     <div className='container'>
       {loadingsearch &&
@@ -758,7 +1026,7 @@ const [checkOutDate, setCheckOutDate] = React.useState('');
   Details
 </button>
 <button
-       className='btn-like' key={index} style={{cursor:"pointer"}} 
+       className='btn-like ms-3' key={index} style={{cursor:"pointer"}} 
        onClick={() => handleamenitiesOpen(index)}
        aria-describedby={`popover-${index}`}
 >
@@ -777,15 +1045,16 @@ const [checkOutDate, setCheckOutDate] = React.useState('');
             <span><DoneIcon color='success'/>Gst Status : {item.gst_status}</span><br/>
             <span><DoneIcon color='success'/>Free cancellation till {item.freecancellationuntil}</span><br/>
             <h5 className='mt-1'>₹{item.tariff}/night</h5>
-            <button className='btn' onClick={toggleDrawer('right', true,index)}>Select Room</button>
+            <button className='btn' onClick={toggleDrawer('right', true,index,item)}>Select Room</button>
             <Dialog
   open={popoverOpen[index]}
   onClose={() => handlePopoverClose(index)}
   fullWidth
   maxWidth="xs"
+  disableBackdropClick
 >
   <DialogTitle className="border-bottom text-center">
-    {item.hotelname}
+      {item.hotelname}
     <IconButton aria-label="close" onClick={() => handlePopoverClose(index)} className="position-absolute end-0">
       <CloseIcon />
     </IconButton>
@@ -805,6 +1074,7 @@ const [checkOutDate, setCheckOutDate] = React.useState('');
     
 
 <Dialog
+key={index}
   open={amenitiesOpen[index]}
   onClose={() => handleaminitiesClose(index)}
   fullWidth
@@ -864,7 +1134,7 @@ return null; // Return null if the condition is not met to skip rendering
           </div>
    
     </Drawer> */}
-    {roomapilist.map((item, index) => (
+    {roomapilist.map((item, indexkey) => (
     <Drawer
         anchor={isMobile ? 'bottom' : 'right'}
         open={state['right']}
@@ -890,8 +1160,8 @@ return null; // Return null if the condition is not met to skip rendering
   <TableBody>
     <TableRow>
       <TableCell>{item.hotelname}</TableCell>    
-      <TableCell>2</TableCell>
-      <TableCell>09 Jun - 10 Jun</TableCell>
+      <TableCell>{selectedValue}</TableCell>
+      <TableCell>{formattedChkInDate} - {formattedChkOutDate}</TableCell>
     </TableRow>
 
     </TableBody>
@@ -913,10 +1183,10 @@ return null; // Return null if the condition is not met to skip rendering
         <>
         
         {
-        item.room_type.map((roomtype, index) => (
-        
+        item.room_type.map((roomtype, ind) => (
+         
             <>
-         <Card className='mb-3'>
+         <Card className='mb-3' key={ind}>
           <CardContent>
      <Typography  variant="h5" component="div" sx={{background:"rgba(216, 216, 216, 0.2)",p:3}}>
           {roomtype.name}
@@ -981,7 +1251,7 @@ return null; // Return null if the condition is not met to skip rendering
       </Accordion>
           </div>
           <div className='col-4'>
-          <button className='btn' onClick={onButtonClick}>{select}</button>
+          <button className='btn' onClick={() => onButtonClick(ind)}>Select</button>
           </div>
         </div>
 
@@ -992,44 +1262,48 @@ return null; // Return null if the condition is not met to skip rendering
      
         </Card>
         </>
-       
+        
          ))} 
         </>
        
-    {/* </Carousel> */}
-    {/* </CardContent>
-    </Card> */}
+    
+  
             </div>
             
       <div className='col-6'>
     <Card >
      <CardContent>
    <h4>Price Breakup</h4>
-    <div className = 'row ms-3 mt-3'>
-    <div className = 'col-6'>
-    <p> Room Charges</p>
-    </div>
-    <div className='col-6'>
-     <span>₹1,935.0</span>
-    </div>
-    </div>
-    <div className='row ms-3'>
-      <div className = 'col-6'>
-        <p> GST </p>
+   
+    <React.Fragment>
+      <div className='row ms-3 mt-3'>
+        <div className='col-6'>
+          <p>Room Charges</p>
+        </div>
+        <div className='col-6'>
+        
+  <span>₹{selectedroom?.tariff === null || selectedroom?.tariff === ''||selectedroom?.tariff===undefined ? item.room_type[0]?.tariff : selectedroom?.tariff}</span>
+
+        </div>
       </div>
-      <div className='col-6'>
-        <span>₹173.12</span>
+
+      <Divider variant="middle" />
+
+      <div className='row ms-3 mt-4'>
+        <div className='col-6'>
+          <p>Total booking amount</p>
+        </div>
+        <div className='col-6'>
+          
+          
+  <h4 >₹{selectedroom?.tariff === null || selectedroom?.tariff === ''||selectedroom?.tariff===undefined ? item.room_type[0]?.tariff : selectedroom?.tariff}</h4>
+
+        </div>
       </div>
-    </div>
-    <Divider variant="middle" />
-    <div className='row ms-3 mt-4'>
-      <div className = 'col-6'>
-        <p>Total booking amount</p>
-      </div>
-      <div className='col-6'>
-        <h4>₹2,115.0</h4>
-      </div>
-    </div>
+    </React.Fragment>
+
+
+
     <div className='mt-3 ms-4 mb-3'>
     <Autocomplete
       disablePortal
@@ -1038,11 +1312,6 @@ return null; // Return null if the condition is not met to skip rendering
       sx={{ width: 300 }}
       renderInput={(params) => <TextField {...params} label="GST" />}
     />
-    </div>
-    <Divider variant="middle" />
-    <div className=' mt-3'>
-      <h4>Cancellation Policy</h4>
-      <span className='mt-3 ms-4'>Free cancellation till 13 Jun'23 11:59 AM</span>
     </div>
     <Divider variant="middle mt-3" />
     <div className='mt-3 mb-3'>
@@ -1065,9 +1334,10 @@ return null; // Return null if the condition is not met to skip rendering
 </div>
     <div className='row justify-content-center'>
       <div className='col-8'>
-        <button className='btn' onClick={onButtonClick}>Confirm Booking</button>
+        <button className='btn' onClick={BookingConfirmation}>Confirm Booking</button>
       </div>
        </div>
+       
     </CardContent>
     </Card>
    

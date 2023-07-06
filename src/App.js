@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css'
-import { BrowserRouter as Router, Switch, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route, Routes,Navigate } from 'react-router-dom';
 import Home from './pages/Home/Home';
 import Navbar from './components/Navbar/Navbar';
 import Insight from './pages/Insights';
@@ -29,19 +29,17 @@ const App = () => {
     
     <Router>
       <Routes>
-        <Route path='/' element={<HomeComponent/>}/>
+        <Route exact path='/' element={<Navigate to="/login" />}></Route>
+      <Route exact path='/login' element={<Login/>}></Route>
+        <Route path='/Book-now' element={<HomeComponent/>}/>
         <Route path='/Bookings' element={<Bookings/>}/>
-        <Route path='/login' element={<Login/>}></Route>
         <Route path='/Payment' element={<Payment/>}/>
         <Route path='/Settings' element={<Settings/>}/>
         <Route path='/gstmanagement' element={<FormDialog/>}></Route>
         <Route path='/Insights' element={<Insight/>}/>
         {/* <Route  path='/Login' element={<Login/>}/> */}
         <Route path='/modal' element={<MyComponent/>}/>
-        <Route path="/card" element={<CardComponent/>}/>
-        
-  
-        
+        <Route path="/card" element={<CardComponent/>}/>      
       </Routes>
     </Router>
  

@@ -160,7 +160,7 @@ const InsightsDashboard = () => {
     {/* <Container className='container-sm'> */}
     <Box className="d-flex justify-content-center">
         <Container maxWidth="lg" className="mb-4 mt-4" sx={{ paddingTop: '80px' }}>
-    <Card variant="outlined" >
+    <Card variant="outlined" style={{boxShadow: "rgb(207 202 202) 0px 0px 10px",border:"1px solid #1976d2"}}>
       <div className='container ' >
             <FormControl  variant="outlined" className='float-end'>
               <InputLabel id="select-label">

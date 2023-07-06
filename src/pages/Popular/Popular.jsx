@@ -53,9 +53,10 @@ const Data = [
 ]
 
  
- const Popular = ({recentsearch}) => {
+ const Popular = ({recentsearch,recentsearcharr}) => {
       useEffect(()=>{
         console.log(recentsearch)
+        console.log(recentsearcharr)
         Aos.init({duration: 2000})
     }, [])
    return (
