@@ -5,6 +5,9 @@ const initialState = {
   Initialbookingdetails: [],
   Addtorecentsearch:[],
   Addtoinsights:[],
+  Addtosettings:[],
+  Addtobookingdetails:[],
+  Addtopayments:[],
 };
 
 export const BookingContext = createContext(initialState);
@@ -18,8 +21,20 @@ export const BookingProvider = (props) => {
     dispatch({ type: "ADD_TO_RECENTSEARCH", payload: values });
   };
   const addtoinsights=(values)=>{
-    dispatch({type:"ADD_TO_Bookingcontext",payload:values})
+    dispatch({type:"ADD_TO_Insights",payload:values})
   }
+  const addtosettings=(values)=>{
+    dispatch({type:"ADD_TO_Settings",payload:values})
+  }
+  const addtobookingdetails=(values)=>
+  {
+    dispatch({type:"ADD_TO_Bookingdetails",payload:values})
+  }
+   
+  const addtopayments=(values)=>{
+    dispatch({type:"ADD_TO_Payments",payload:values})
+  }
+
   return (
     <BookingContext.Provider
       value={{
@@ -27,7 +42,10 @@ export const BookingProvider = (props) => {
         addtobookingsearch,
         Addtorecentsearch:state.Addtorecentsearch,
         addtorecentsearch,
-        Addtoinsights:state.ADD_TO_BookingContext
+        Addtoinsights:state.ADD_TO_BookingContext,
+        addtoinsights,
+        Addtosettings:state.addtosettings,
+        addtosettings,
       }}
     >
       {props.children}

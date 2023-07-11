@@ -18,7 +18,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import { pink, purple } from '@mui/material/colors';
 import ListItemButton from '@mui/material/ListItemButton';
-import { useEffect } from 'react';
+import {BookingContext} from '../Context/BookingContextProvider';
 
 export default function Bookings() {
   const [value, setValue] = React.useState('1');
@@ -28,6 +28,7 @@ export default function Bookings() {
   const [isInclusions, setInclusions]  = React.useState(true);
   const [istraveller,setTraveller] = React.useState(true);
   const [iscreation,setCreation] = React.useState(true);
+  const {Initialbookingdetails,addtobookingsearch} = React.useContext(BookingContext)
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -174,7 +175,7 @@ export default function Bookings() {
                   <TextField
                     label="Search Travel-id or Booking-id"
                     value={searchTerm}
-                    onChange={handleSearchChange}
+                    onChange={handleSearchChange} 
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position="end">
@@ -184,7 +185,7 @@ export default function Bookings() {
                     }}
                     style={{ marginRight: '500px', width: isMobile ? '100%' : '50%' }}
                   />
-                  <TabContext value={value}>
+                  <TabContext className="mt-3" value={value}>
                     <TabList onChange={handleChange} aria-label="lab API tabs example">
                       <Tab label="Past" value="1" />
                       <Tab label="Ongoing" value="2" />

@@ -53,7 +53,7 @@ const Data = [
 ]
 
  
- const Popular = ({recentsearch,recentsearcharr}) => {
+ const Popular = React.memo(({recentsearch,recentsearcharr}) => {
       useEffect(()=>{
         console.log(recentsearch)
         console.log(recentsearcharr)
@@ -61,83 +61,51 @@ const Data = [
     }, [])
    return (
     <>
-    {recentsearch &&
-      
-     <section className='popular section container'>
-      <div className="secContainter">
-
-        <div className="secHeader flex">
-
-          <div data-aos="fade-right" data-aos-duration="1500" className="textDiv">
-          <h2 className='secTitle'>
-        Recents
-          </h2>
-          <p>
-          Your Recent Destinations 
-          </p>
+    {recentsearch && (
+      <section className="popular section container">
+        <div className="secContainter">
+          <div className="secHeader flex">
+            <div data-aos="fade-right" data-aos-duration="1500" className="textDiv">
+              <h2 className="secTitle">Recents</h2>
+              <p>Your Recent Destinations</p>
+            </div>
+            <div data-aos="fade-left" data-aos-duration="1500" className="iconsDiv flex">
+              <BsArrowLeftShort className="icon leftIcon" />
+              <BsArrowRightShort className="icon" />
+            </div>
           </div>
-
-          <div data-aos="fade-left" data-aos-duration="1500" className="iconsDiv flex">
-            <BsArrowLeftShort className="icon leftIcon"/>
-            <BsArrowRightShort className="icon"/>
+          <div className="mainContent grid">
+            {/* Single Destination from the Data Array */}
+            {Data.map(({ id, imgSrc, destTitle, location,grade}) => (
+              <div key={id} data-aos="fade-up" className="singleDestination">
+                <div className="destImage">
+                  <img src={imgSrc} alt="" />
+                  <div className="overlayInfo">
+                    <h3>{destTitle}</h3>
+                    <p>{location}</p>
+                    <BsArrowRightShort className="icon" />
+                  </div>
+                </div>
+                <div className="destFooter">
+                  <div className="number">0{id}</div>
+                  <div className="destText flex">
+                    <h6>{location}</h6>
+                    <span className="flex">
+                      <span className="dot">
+                        <BsDot className="icon" />
+                      </span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
-
-        <div className="mainContent grid">
-          {/* Single Destination from the map Array */}
-
-          {
-            Data.map(({id, imgSrc, destTitle, location, grade })=>{
-              return (
-                <div data-aos="fade-up" className="singleDestination">
-            <div className="destImage">
-
-            <img src={imgSrc} alt="" />
-
-            <div className="overlayInfo">
-                <h3>
-                  {destTitle}
-                </h3>
-                <p>
-                  {location}
-                </p>
-
-                <BsArrowRightShort className='icon'/>
-                
-            </div>
-            </div>
-
-            <div className="destFooter">
-            <div className="number">
-                0{id}
-             </div>
-
-             <div className="destText flex">
-               <h6>
-                {location} 
-               </h6>
-               <span className='flex'>
-                <span className="dot">
-                <BsDot className='icon'/>
-                </span>
-                
-               </span>
-             </div>
-            </div>
-
-             
-
-           </div>
-              )
-            })
-          }
-           
-        </div>
-      </div>
-     </section>
+      </section>
+    )}
+  </>
+    )
  }
-     </>
-   )
- }
+ )
  
  export default Popular

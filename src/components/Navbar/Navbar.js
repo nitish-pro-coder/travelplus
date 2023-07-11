@@ -91,7 +91,7 @@ const Navbar = () => {
           <div className={active}>
             <ul onClick={removeNav} className="navLists flex">
               <li className="navItem">
-                <Link to='/' className='navLink'>Home</Link>
+                <Link to='/book-now' className='navLink'>Home</Link>
               </li>
               <li className="navItem">
                 <Link to='/Bookings' className='navLink'>Bookings</Link>

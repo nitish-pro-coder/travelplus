@@ -91,8 +91,12 @@
 .btn-like:hover {
   cursor: pointer;
 }
-
-
+.activeroom{
+  border:  #7862dc 1px solid;
+}
+.m-red{
+  color: #fc031c;
+}
 
 .datePickerContainer input {
   cursor: pointer;

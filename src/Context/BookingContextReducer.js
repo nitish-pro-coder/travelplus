@@ -10,6 +10,26 @@ export default (state,action) => {
               ...state,
               Addtorecentsearch: action.payload,
             }
+          case 'ADD_TO_Bookingcontext':
+            return{
+              ...state,
+              Addtobookingcontext:action.payload
+            }
+          case 'ADD_TO_Insights':
+            return{
+              ...state,
+              Addtoinsights:action.payload
+            }
+          case 'ADD_TO_Settings':
+            return {
+              ...state,
+              Addtosettings:action.payload
+            } 
+          case 'ADD_TO_Payments':
+            return {
+              ...state,
+              Addtopayments:action.payload
+          }  
         default:
           return state;
       }

@@ -9,7 +9,7 @@ import Card from '@mui/material/Card';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import axios from 'axios';
-import { Box, Button, CardContent, Checkbox, Chip, DialogContentText, Divider, FormGroup, MenuItem, Popover, Rating, Select, Skeleton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import { Box, Button, CardContent, Checkbox, Chip, DialogContentText, Divider, FormGroup, MenuItem, Popover, Rating, Select, Skeleton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow,Backdrop, ClickAwayListener} from '@mui/material';
 // import { Box, Button,  CardContent, Checkbox, Divider, Popover, Rating, Skeleton, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
 import Slider from '@mui/material/Slider';
 import Popular from '../Popular/Popular';
@@ -44,12 +44,12 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {BookingContext} from '../../Context/BookingContextProvider'
-import { add } from 'date-fns';
 import { GridAddIcon } from '@mui/x-data-grid';
+import { blue } from '@mui/material/colors';
 
  const Home = () => {
   const [open, setOpen] = React.useState(false);
-  const {Initialbookingdetails,addtobookingsearch,Addtorecentsearch,}= useContext(BookingContext)
+  const {Initialbookingdetails,addtobookingsearch}= useContext(BookingContext)
   function valuetext(value) {
     return value;
   }
@@ -67,7 +67,7 @@ import { GridAddIcon } from '@mui/x-data-grid';
         key: "selection",
       },
     ]);
-    const [showDateRangePicker, setShowDateRangePicker] = React.useState(false);
+    
     const [recentsearch,setrecentsearch]=React.useState(true);
     const [searchrender,setsearchrender]=React.useState(false);
     const [loadingsearch,setloadingsearch]=React.useState(false);
@@ -86,6 +86,10 @@ import { GridAddIcon } from '@mui/x-data-grid';
   const [roomrequest,setroomrequest]=React.useState();
   const [hotelrequest,sethotelrequest]=React.useState();
   const [selectedroom,setselectedroom] = React.useState();
+  const [errorMessage, setErrorMessage] = React.useState([]);
+  const [activeroom, setActiveroom] = React.useState(false);
+  const [succesMessage, setSuccesMessage] = React.useState([]);
+  const [selectedCard, setSelectedCard] = React.useState(0);
 
 
   
@@ -106,12 +110,44 @@ import { GridAddIcon } from '@mui/x-data-grid';
   };
   const GST=[];
   
-  const Showrecentsearch=()=>{
-    
+  const Showrecentsearch=(event)=>{
+    event.preventDefault();
+    let errors = {};
+    // if (!formData.location) {
+    //   errors.location = 'Location is required';
+    // }
 
-    axios.post('http://localhost:3000/api/Citylist/',{Cityname:selectedLocation}).
-    then((res)=>{console.log(res.data)})
-    .catch((err)=>{console.log(err)})
+    // if (!formData.checkInDate) {
+    //   errors.checkInDate = 'Check-In Date is required';
+    // }
+
+    // if (!formData.checkOutDate) {
+    //   errors.checkOutDate = 'Check-Out Date is required';
+    // }
+
+    // if (!formData.travelerName) {
+    //   errors.travelerName = 'Traveler Name is required';
+    // }
+    // if(selectedValue===0 && selectedtrvValue===0){
+    //   errors.Rooms = 'Rooms and Traveler is required';
+    // }
+    // else if(selectedtrvValue==0){
+    //   errors.Travelers = 'Travelers is required';
+    // }
+    // else if(selectedValue==0){
+    //   errors.Rooms = 'Rooms is required';
+    // }
+    // setFormErrors(errors);
+
+    // if (Object.keys(errors).length === 0) {
+    //   // Perform your form submission logic here
+    //   console.log(formData);
+    // }
+    
+  // else{
+    // axios.post('http://localhost:3000/api/Citylist/',{Cityname:selectedLocation}).
+    // then((res)=>{console.log(res.data)})
+    // .catch((err)=>{console.log(err)})
     console.log(Initialbookingdetails)
     // addtobookingsearch([
     //   {
@@ -125,40 +161,40 @@ import { GridAddIcon } from '@mui/x-data-grid';
     addtobookingsearch([])
     setrecentsearch(false)
     setloadingsearch(true)
-//     console.log(location)
-//     var data = {
-//       checkin: checkInDate,
-//       checkout: checkOutDate,
-//       expected_checkin_time: "13:00",
-//       expected_checkout_time: "11:59",
-//       latitude: location[0]?.lat,
-//       longitude: location[0]?.lon,
-//       room_config: "A,A,A,A",
-//       // grade: "HS1",
-//       payment_mode: "Pay at Hotel",
-//       radius: 15,
-//       min:100,
-//       max: value[1]
-//     };
+    console.log(location)
+    var data = {
+      checkin: checkInDate,
+      checkout: checkOutDate,
+      expected_checkin_time: "13:00",
+      expected_checkout_time: "11:59",
+      latitude: location[0]?.lat,
+      longitude: location[0]?.lon,
+      room_config: "A,A",
+      // grade: "HS1",
+      payment_mode: "Pay at Hotel",
+      radius: 15,
+      min:100,
+      max: value[1]
+    };
     
-//     var config = {
-//       method: 'post',
-//       url: 'https://developers.hummingbirdindia.com/api/v2.2/hotelavailability',
-//       headers: { 
-//         'Authorization': 'FA31C4183B624FF6A70D776420B49B41',
-//         'Content-Type': 'application/json', 
-//         'Accept': 'application/json'
-//       },
-//       data : data
-//     }
-//     axios(config)
-// .then(response=> {
-//   console.log(response.data.data);
-//   sethotelapilist(response.data.data);
-// })
-// .catch(error=> {
-//   console.log(error);
-// });
+    var config = {
+      method: 'post',
+      url: 'https://developers.hummingbirdindia.com/api/v2.2/hotelavailability',
+      headers: { 
+        'Authorization': 'FA31C4183B624FF6A70D776420B49B41',
+        'Content-Type': 'application/json', 
+        'Accept': 'application/json'
+      },
+      data : data
+    }
+    axios(config)
+.then(response=> {
+  console.log(response.data.data);
+  sethotelapilist(response.data.data);
+})
+.catch(error=> {
+  console.log(error);
+});
     
     setTimeout(() => {
       setloadingsearch(false)
@@ -167,7 +203,7 @@ import { GridAddIcon } from '@mui/x-data-grid';
     
     
     
-    
+  // }
   }
   const [checked, setChecked] = React.useState([]);
 
@@ -186,6 +222,8 @@ import { GridAddIcon } from '@mui/x-data-grid';
   const [isOpen, setIsOpen] = React.useState(false);
 
   const toggleDrawer = (anchor, open,index,item) => (event) => {
+
+    setSelectedCard(0);
     console.log(item)
     sethotelrequest(item)
     var roomdata = {
@@ -271,10 +309,9 @@ import { GridAddIcon } from '@mui/x-data-grid';
   
 
   const onButtonClick = (ind) =>{
-    console.log(ind)
+    setSelectedCard(ind);
     console.log(roomapilist[0].room_type[ind])
-    console.log(roomapilist)
-    console.log(selectedroom)
+   setActiveroom(true,ind)
     setselectedroom(roomapilist[0].room_type[ind])
     
   }
@@ -300,6 +337,11 @@ import { GridAddIcon } from '@mui/x-data-grid';
     const updatedPopoverOpen = [...popoverOpen];
     updatedPopoverOpen[index] = false;
     setamenitiesOpen(updatedPopoverOpen);
+    
+
+    // if (event.key === 'Escape') {
+    //   updatedPopoverOpen[index] = false;
+    // }
   };
  
   
@@ -315,54 +357,59 @@ import { GridAddIcon } from '@mui/x-data-grid';
   const checkInDateRef = React.useRef(null);
   const checkOutDateRef = React.useRef(null);
   const [currentDate, setCurrentDate] = React.useState('');
-  useEffect(() => {
+
+  const [checkInDate, setCheckInDate] = React.useState(getCurrentDate());
+const [checkOutDate, setCheckOutDate] = React.useState(getCurrentDate());
+useEffect(() => {
     
    
-    const today = new Date();
-    const year = today.getFullYear();
-    let month = today.getMonth() + 1;
-    let day = today.getDate();
-  
-    if (month < 10) {
-      month = '0' + month;
-    }
-    if (day < 10) {
-      day = '0' + day;
-    }
-  
-    const formattedDate = `${year}-${month}-${day}`;
-    setCheckInDate(formattedDate)
-    setCheckOutDate(formattedDate)
-  }, []);
-  const [checkInDate, setCheckInDate] = React.useState('');
-const [checkOutDate, setCheckOutDate] = React.useState('');
-  
+  const today = new Date();
+  const year = today.getFullYear();
+  let month = today.getMonth() + 1;
+  let day = today.getDate();
+
+  if (month < 10) {
+    month = '0' + month;
+  }
+  if (day < 10) {
+    day = '0' + day;
+  }
+
+  const formattedDate = `${year}-${month}-${day}`;
+  setCheckInDate(formattedDate)
+  setCheckOutDate(formattedDate)
+}, []);
   const handleCheckInDateChange = (event) => {
-    checkOutDateRef.current.focus();
+    checkOutDateRef?.current?.focus();
     console.log(event.target.value);
     const selectedDate = event.target.value;
     setCheckInDate(selectedDate);
   setCheckOutDate(selectedDate);
+  const { name, value } = event.target;
+  setFormData((prevFormData) => ({
+   ...prevFormData,
+   [name]: value,
+  }));
   };
 
   const handleCheckOutDateChange = (event) => {
     const selectedDate = event.target.value;
     console.log(selectedDate)
-    
-  setCheckOutDate(selectedDate);
+    setCheckOutDate(selectedDate);
+    const { name, value } = event.target;
+    setFormData((prevFormData) => ({
+     ...prevFormData,
+    [name]: value,
+  }));
   };
 
-  const handleBackdropClick = (event) => {
-    //these fail to keep the modal open
-    event.stopPropagation();
-    return false;
-  };
+  // const handleBackdropClick = (event) => {
+  //   //these fail to keep the modal open
+  //   event.stopPropagation();
+  //   return false;
+  // };
 
   const BookingConfirmation=(ind)=>{
-    // console.log(roomrequest)
-    
-    console.log(selectedroom)
-    console.log(roomrequest)
     // Create three objects
 const object1 = 
 {
@@ -408,68 +455,88 @@ console.log(combinedObject);
 // })
 
     
-    // var data = 
-    //   {
-    //     "hotelid":  roomrequest?.hotelid,
-    //     "checkin": checkInDate,
-    //     "checkout": checkOutDate,
-    //     "expected_checkin_time": "12:00",
-    //     "expected_checkout_time": "11:59",
-    //     "room_type_code": selectedroom?.room_type_code,
-    //     "rate_plan_code": selectedroom?.rate_plan_code,
-    //     "booker_name": "Nitish",
-    //     "booker_email": "nitish@warblerit.com",
-    //     "client_requestno": "XYZ",
-    //     "room_config": roomrequest?.room_config,
-    //     "tariff": selectedroom?.tariff.toString(),
-    //     "room1": [
-    //       {
-    //         "emp_code": "EMP1082",
-    //         "title": "Mr",
-    //         "first_name": "XXXX",
-    //         "last_name": "YYYY",
-    //         "mobile_no": "123456789",
-    //         "email": "xxxxx@yyy.com",
-    //         "designation": "Manager",
-    //         "grade": "Manager",
-    //         "column1": "Test Data 1",
-    //         "column2": "Test Data 2",
-    //         "column3": "Test Data 3",
-    //         "column4": "Test Data 4",
-    //         "column5": "Test Data 5",
-    //         "column6": "Test Data 6",
-    //         "column7": "Test Data 1",
-    //         "column8": "Test Data 8",
-    //         "column9": "Test Data 9",
-    //         "column10": "Test Data 10"
-    //       }
-    //     ]
-        
-      
-    // };
+    var data = 
+      {
+        "hotelid":  roomrequest?.hotelid,
+        "checkin": checkInDate,
+        "checkout": checkOutDate,
+        "expected_checkin_time": "12:00",
+        "expected_checkout_time": "11:59",
+        "room_type_code": selectedroom?.room_type_code,
+        "rate_plan_code": selectedroom?.rate_plan_code+","+selectedroom?.rate_plan_code,
+        "booker_name": "Nitish",
+        "booker_email": "nitish@warblerit.com",
+        "client_requestno": "XYZ",
+        "room_config": "A,A",
+        "tariff": selectedroom?.tariff.toString()+","+selectedroom?.tariff.toString(),
+        "room1":[
+          {
+            "emp_code": "EMP1082",
+            "title": "Mr",
+            "first_name": "XXXX",
+            "last_name": "YYYY",
+            "mobile_no": "123456789",
+            "email": "xxxxx@yyy.com",
+            "designation": "Manager",
+            "grade": "Manager",
+            "column1": "Test Data 1",
+            "column2": "Test Data 2",
+            "column3": "Test Data 3",
+            "column4": "Test Data 4",
+            "column5": "Test Data 5",
+            "column6": "Test Data 6",
+            "column7": "Test Data 1",
+            "column8": "Test Data 8",
+            "column9": "Test Data 9",
+            "column10": "Test Data 10"
+          }
+        ],
+        "room2": [
+          {
+            "emp_code": "EMP1083",
+            "title": "Mr",
+            "first_name": "XXXX",
+            "last_name": "YYYY",
+            "mobile_no": "123456788",
+            "email": "xxxxx@yyyy.com",
+            "designation": "Ass Manager",
+            "grade": "Manager",
+            "column1": "Test Data 1",
+            "column2": "Test Data 2",
+            "column3": "Test Data 3",
+            "column4": "Test Data 4",
+            "column5": "Test Data 5",
+            "column6": "Test Data 6",
+            "column7": "Test Data 1",
+            "column8": "Test Data 8",
+            "column9": "Test Data 9",
+            "column10": "Test Data 10"
+          }
+        ]
+    };
     
 
-    // console.log(data)
+    console.log(data)
     // console.log(hotelapilist[index]?.hotelid)
     
-//     var config = {
-//       method: 'post',
-//       url: 'https://developers.hummingbirdindia.com/api/v2.2/hotelavailability',
-//       headers: { 
-//         'Authorization': 'FA31C4183B624FF6A70D776420B49B41',
-//         'Content-Type': 'application/json', 
-//         'Accept': 'application/json'
-//       },
-//       data : data
-//     }
-//     axios(config)
-// .then(response=> {
-//   console.log(response.data.data);
-//   sethotelapilist(response.data.data);
-// })
-// .catch(error=> {
-//   console.log(error);
-// });
+    var config = {
+      method: 'post',
+      url: 'https://developers.hummingbirdindia.com/api/v2.2/processbooking',
+      headers: { 
+        'Authorization': 'FA31C4183B624FF6A70D776420B49B41',
+        'Content-Type': 'application/json', 
+        'Accept': 'application/json'
+      },
+      data : data
+    }
+    axios(config)
+.then(response=> {
+  console.log(response.data.data);
+  setSuccesMessage()
+})
+.catch(error=> {
+  console.log(error);
+});
     
   }
   const open1 = Boolean(anchorEl);
@@ -480,22 +547,42 @@ console.log(combinedObject);
   const [formattedChkInDate,setformattedChkInDate]=React.useState('');
   const [formattedChkOutDate,setformattedChkOutDate]=React.useState('');
 
-  const handleIncrement = () => {
+  const handleIncrement = (event) => {
     setSelectedValue((prevValue) =>prevValue < 4 ? prevValue + 1 : prevValue);
+    const { name, value } = event.target;
+          setFormData((prevFormData) => ({
+           ...prevFormData,
+          [name]: value,
+    }));
   };
-  const handletrvIncrement = () => {
+  const handletrvIncrement = (event) => {
     setSelectedtrvValue((prevValue) =>prevValue < 8 ? prevValue + 1 : prevValue);
+    const { name, value } = event.target;
+          setFormData((prevFormData) => ({
+           ...prevFormData,
+          [name]: value,
+        }));
   };
 
-  const handleDecrement = () => {
+  const handleDecrement = (event) => {
     setSelectedValue((prevValue) => (prevValue > 0 ? prevValue - 1 : prevValue));
+    const { name, value } = event.target;
+          setFormData((prevFormData) => ({
+           ...prevFormData,
+          [name]: value,
+        }));
   };
-  const handletrvDecrement = () => {
+  const handletrvDecrement = (event) => {
     setSelectedtrvValue((prevValue) => (prevValue > 0 ? prevValue - 1 : prevValue));
+    const { name, value } = event.target;
+          setFormData((prevFormData) => ({
+           ...prevFormData,
+          [name]: value,
+    }));
     
   };
 
-  const handleTextFieldClick = () => {
+  const handleTextFieldClick = (event) => {
     setIsCardVisible((prevState) => !prevState);
   };
 
@@ -504,11 +591,8 @@ console.log(combinedObject);
     const item = {
       amenities: [true, false, true, false, true, true]
     };
-    
-    
     const dateObj = new Date(checkInDate);
     const dateObj1 = new Date(checkOutDate);
-
     setformattedChkInDate(dateObj.toLocaleDateString('en-US', {
   day: 'numeric',
   month: 'short'
@@ -519,11 +603,13 @@ console.log(combinedObject);
   month: 'short'
 }))
 
-console.log(selectedroom?.tariff != null || selectedroom?.tariff != ''||selectedroom?.tariff===undefined ? selectedroom?.tariff : "dgsdg")
-},[checked],[checkInDate],[checkOutDate],[selectedroom])
+console.log(formattedChkInDate)
+console.log(formattedChkOutDate)
+},[checked],[checkInDate],[checkOutDate],[selectedroom],[formattedChkInDate],[formattedChkOutDate])
 
 useEffect(() => {
-  
+  console.log(formattedChkInDate);
+  console.log(formattedChkOutDate);
   console.log(recentsearcharr);
 }, []);
 
@@ -556,12 +642,52 @@ const handleBlur = () => {
  
   setIsCardVisible((prevState) => !prevState);
 };
+const [formData, setFormData] = React.useState({
+  location: '',
+  
+});
+
+const [formErrors, setFormErrors] = React.useState({
+  location: '',
+  checkInDate: '',
+  checkOutDate: '',
+  Rooms:selectedValue,
+  Travelers:selectedtrvValue,
+});
+
+function getCurrentDate() {
+  const today = new Date();
+  const year = today.getFullYear();
+  let month = today.getMonth() + 1;
+  let day = today.getDate();
+
+  // Add leading zeros if necessary
+  if (month < 10) {
+    month = `0${month}`;
+  }
+  if (day < 10) {
+    day = `0${day}`;
+  }
+
+  return `${day}/${month}/${year}`;
+}
+
+const handleBackdropClick = (event) => {
+  // Prevent closing when clicking on the backdrop
+  event.stopPropagation();
+};
+
+const handleClickAway = () => {
+  setOpen(false);
+};
+
 
    return (
     <>
     <Navbar/>
     <section className='home'>
       <div className="secContainer container">
+        <form>
         <div className="homeText">
            <h1 data-aos="fade-up" data-aos-duration="2000" className="title">
             Plan Your Trip !!!
@@ -575,7 +701,7 @@ const handleBlur = () => {
         <div  className="homeCard grid">
         <div data-aos="fade-right" data-aos-duration="2000" >
               <label htmlFor="location">Location</label>
-              
+              <div style={{ position: 'relative', zIndex: 1 }}>
               <Autocomplete
               type="text"
       disablePortal
@@ -600,10 +726,14 @@ const handleBlur = () => {
           lon: item.lon,
           }))
           setrecentsearcharr([...recentsearcharr,updatedList])
-          console.log(selectedLocation)
+          // console.log(selectedLocation)
           setlocationlist(updatedList)
           setSelectedLocation(null);
-          
+          const { name, value } = event.target;
+          setFormData((prevFormData) => ({
+           ...prevFormData,
+          [name]: value,
+        }));
         })
     }).catch((err)=>{
       console.log(err)
@@ -618,6 +748,8 @@ const handleBlur = () => {
     <div style={{ zIndex: 1500 /* Set your desired z-index value */, position: 'relative' }}>{children}</div>
   )}
   />
+  </div>
+  {/* {formErrors.location && <p className='m-red'>{formErrors.location}</p>} */}
               
            </div>
            <div data-aos="fade-right" data-aos-duration="2500">
@@ -627,7 +759,6 @@ const handleBlur = () => {
       type="date"
       value={checkInDate}
       fullWidth
-      
       inputProps={{
         min: currentDate,
       }}
@@ -636,18 +767,24 @@ const handleBlur = () => {
     />
   </div>
   <div data-aos="fade-right" data-aos-duration="2500">
-    <TextField
+  <TextField
       id="check-out-date"
       label="Check-Out Date"
       type="date"
-      value={checkOutDate}
+      value={checkOutDate.split('/').reverse().join('-')} // Format the value as "yyyy-mm-dd"
       onChange={handleCheckOutDateChange}
       fullWidth
-      inputRef={checkOutDateRef}
+      InputLabelProps={{
+        shrink: true,
+      }}
+      inputProps={{
+        inputFormat: 'dd/MM/yyyy',
+      }}
     />
+  
   </div>
-
-<Dialog open={trdetopen} onClose={handletrdetclose}  onBackdropClick={handleBackdropClick} disableBackdropClick>
+<ClickAwayListener onClickAway={handleClickAway}>
+<Dialog open={trdetopen} onClose={handletrdetclose}  BackdropProps={{ onClick: handleBackdropClick }}>
 <DialogTitle>
     No of Travelers
     <IconButton
@@ -697,7 +834,9 @@ const handleBlur = () => {
            
           </Box>
         </DialogContent>
+        <Backdrop open={open} onClick={handleBackdropClick} />
       </Dialog>
+      </ClickAwayListener>
           
                      
            
@@ -731,6 +870,7 @@ const handleBlur = () => {
       <IconButton onClick={handleIncrement}>
         <GridAddIcon />
       </IconButton>
+      {/* {formErrors.Rooms && <p>{formErrors.Rooms}</p>} */}
        </div>
        
        </div>
@@ -752,6 +892,8 @@ const handleBlur = () => {
       </Card>
               )}
               </div>
+              
+      {/* {formErrors.Rooms && <p>{formErrors.Rooms}</p>} */}
         </div>
            <div data-aos="fade-right" data-aos-duration="3000">
               <label htmlFor="price">Price Range</label>
@@ -800,7 +942,7 @@ const handleBlur = () => {
         </div>
            <button data-aos="fade-left" data-aos-duration="3500" className='btn' onClick={Showrecentsearch}>Search</button>
         </div>
-       
+        </form>
         
       </div>
   
@@ -1046,23 +1188,26 @@ const handleBlur = () => {
             <span><DoneIcon color='success'/>Free cancellation till {item.freecancellationuntil}</span><br/>
             <h5 className='mt-1'>₹{item.tariff}/night</h5>
             <button className='btn' onClick={toggleDrawer('right', true,index,item)}>Select Room</button>
+            <ClickAwayListener onClickAway={handleClickAway}>
             <Dialog
+            key={index}
   open={popoverOpen[index]}
   onClose={() => handlePopoverClose(index)}
   fullWidth
   maxWidth="xs"
   disableBackdropClick
 >
-  <DialogTitle className="border-bottom text-center">
+  <DialogTitle className="border-bottom text-center" key={index}>
       {item.hotelname}
-    <IconButton aria-label="close" onClick={() => handlePopoverClose(index)} className="position-absolute end-0">
+    <IconButton aria-label="close" key={index} onClick={() => handlePopoverClose(index)} className="position-absolute end-0">
       <CloseIcon />
     </IconButton>
   </DialogTitle>
-  <DialogContent>
-    <p>{item.hoteldescription}</p>
+  <DialogContent key={index}>
+    <p key={index}>{item.hoteldescription}</p>
   </DialogContent>
 </Dialog>
+</ClickAwayListener>
 {/* {item.amenities
   .filter((amenity) => amenity === true)
    */}
@@ -1072,7 +1217,7 @@ const handleBlur = () => {
         {/* Render additional JSX for each filtered amenity */}
       
     
-
+<ClickAwayListener onClickAway={handleClickAway}>
 <Dialog
 key={index}
   open={amenitiesOpen[index]}
@@ -1082,11 +1227,11 @@ key={index}
 >
   <DialogTitle className="border-bottom text-center">
   Amenities List
-    <IconButton aria-label="close" onClick={() => handleaminitiesClose(index)} className="position-absolute end-0">
+    <IconButton aria-label="close" key={index} onClick={() => handleaminitiesClose(index)} className="position-absolute end-0">
       <CloseIcon />
     </IconButton>
   </DialogTitle>
-  <DialogContent>
+  <DialogContent key={index}>
   {Object.keys(item.amenities).map((key, index) => {
       if (item.amenities[key]) {
         return <li key={index}>{key}</li>;
@@ -1094,7 +1239,9 @@ key={index}
       return null;
     })}
   </DialogContent>
+ 
 </Dialog>
+</ClickAwayListener>
 </div>
 {/* ); */}
 
@@ -1123,28 +1270,22 @@ return null; // Return null if the condition is not met to skip rendering
       </CardContent>
     </Card>
  }
-  
     </div>
-
-    {/* <Drawer anchor="right" open={isOpen} onClose={toggleDrawer} PaperProps={{ style: { width: 1000 } }}>
-           <div style={{background:"blue"}}>
-            <IconButton onClick={toggleDrawer}>
-              <CloseIcon />
-            </IconButton>
-          </div>
-   
-    </Drawer> */}
+    
+    
     {roomapilist.map((item, indexkey) => (
+      
     <Drawer
         anchor={isMobile ? 'bottom' : 'right'}
         open={state['right']}
-        onClose={toggleDrawer('right', false)}
+        onClose={toggleDrawer('right', false,item)}
         PaperProps={{ style: { width: "80%" } }}
+        key={indexkey}
       >
 
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 2,backgroundColor:'#7862dc'}}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 2,backgroundColor:'#7862dc'}} key={item}>
           <Typography variant="h6" color={"#fff"}>{item.hotelname}</Typography>
-          <IconButton onClick={toggleDrawer('right', false)}>
+          <IconButton onClick={toggleDrawer('right', false,item)}>
             <CloseIcon htmlColor={'#fff'} />
           </IconButton>
         </Box>
@@ -1158,7 +1299,7 @@ return null; // Return null if the condition is not met to skip rendering
     </TableRow>
   </TableHead>
   <TableBody>
-    <TableRow>
+    <TableRow key={item}> 
       <TableCell>{item.hotelname}</TableCell>    
       <TableCell>{selectedValue}</TableCell>
       <TableCell>{formattedChkInDate} - {formattedChkOutDate}</TableCell>
@@ -1184,10 +1325,11 @@ return null; // Return null if the condition is not met to skip rendering
         
         {
         item.room_type.map((roomtype, ind) => (
-         
             <>
-         <Card className='mb-3' key={ind}>
-          <CardContent>
+         <Card className={`mb-3 ${selectedCard === ind ? 'activeroom' : ''}`}
+          key={ind}
+          >
+          <CardContent key={ind}>
      <Typography  variant="h5" component="div" sx={{background:"rgba(216, 216, 216, 0.2)",p:3}}>
           {roomtype.name}
         </Typography>
@@ -1241,9 +1383,9 @@ return null; // Return null if the condition is not met to skip rendering
           <Typography>View cancellation policy</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          {/* <Typography> */}
+          
             {roomtype.cancellation_policy.replace(/<[^>]+>/g,'')}
-          {/* </Typography> */}
+          
          
           
           
@@ -1251,7 +1393,7 @@ return null; // Return null if the condition is not met to skip rendering
       </Accordion>
           </div>
           <div className='col-4'>
-          <button className='btn' onClick={() => onButtonClick(ind)}>Select</button>
+          <button className='btn' key={ind} onClick={() => onButtonClick(ind)}>Select</button>
           </div>
         </div>
 
@@ -1271,81 +1413,73 @@ return null; // Return null if the condition is not met to skip rendering
             </div>
             
       <div className='col-6'>
-    <Card >
-     <CardContent>
-   <h4>Price Breakup</h4>
-   
-    <React.Fragment>
-      <div className='row ms-3 mt-3'>
-        <div className='col-6'>
-          <p>Room Charges</p>
+      <Card key={selectedCard}>
+    <CardContent>
+      <h4>Price Breakup</h4>
+      <React.Fragment key={selectedCard}>
+        <div className="row ms-3 mt-3">
+          <div className="col-6">
+            <p>Room Charges</p>
+          </div>
+          <div className="col-6">
+            <span>₹{item.room_type[selectedCard]?.tariff}</span>
+          </div>
         </div>
-        <div className='col-6'>
-        
-  <span>₹{selectedroom?.tariff === null || selectedroom?.tariff === ''||selectedroom?.tariff===undefined ? item.room_type[0]?.tariff : selectedroom?.tariff}</span>
 
+        <Divider key="divider-1" variant="middle" />
+
+        <div className="row ms-3 mt-4">
+          <div className="col-6">
+            <p>Total booking amount</p>
+          </div>
+          <div className="col-6">
+            <h4>₹{item.room_type[selectedCard]?.tariff}</h4>
+          </div>
+        </div>
+      </React.Fragment>
+
+      <div className="mt-3 ms-4 mb-3">
+        <Autocomplete
+          disablePortal
+          id="combo-box-demo"
+          options={GST}
+          sx={{ width: 300 }}
+          renderInput={(params) => <TextField {...params} label="GST" />}
+        />
+      </div>
+      <Divider key="divider-2" variant="middle mt-3" />
+
+      <div className="mt-3 mb-3">
+        <h4>Payment mode</h4>
+      </div>
+      <div className="ms-4">
+        <FormControl>
+          <FormLabel id="demo-controlled-radio-buttons-group"></FormLabel>
+          <RadioGroup
+            aria-labelledby="demo-controlled-radio-buttons-group"
+            name="controlled-radio-buttons-group"
+            value={value}
+            onChange={handleChange}
+          >
+            <FormControlLabel value="hotel" control={<Radio />} label="Pay @ HOTEL" />
+            <FormControlLabel value="now" control={<Radio />} label="Pay now" />
+            <FormControlLabel value="wallet" control={<Radio />} label="Wallet" />
+          </RadioGroup>
+        </FormControl>
+      </div>
+      <div className="row justify-content-center">
+        <div className="col-8">
+          <button className="btn" onClick={BookingConfirmation}>
+            Confirm Booking
+          </button>
         </div>
       </div>
-
-      <Divider variant="middle" />
-
-      <div className='row ms-3 mt-4'>
-        <div className='col-6'>
-          <p>Total booking amount</p>
-        </div>
-        <div className='col-6'>
-          
-          
-  <h4 >₹{selectedroom?.tariff === null || selectedroom?.tariff === ''||selectedroom?.tariff===undefined ? item.room_type[0]?.tariff : selectedroom?.tariff}</h4>
-
-        </div>
-      </div>
-    </React.Fragment>
-
-
-
-    <div className='mt-3 ms-4 mb-3'>
-    <Autocomplete
-      disablePortal
-      id="combo-box-demo"
-      options={GST}
-      sx={{ width: 300 }}
-      renderInput={(params) => <TextField {...params} label="GST" />}
-    />
-    </div>
-    <Divider variant="middle mt-3" />
-    <div className='mt-3 mb-3'>
-      <h4>Payment mode</h4>
-    </div>
-  <div className='ms-4'>
-  <FormControl>
-  <FormLabel id="demo-controlled-radio-buttons-group"></FormLabel>
-  <RadioGroup
-    aria-labelledby="demo-controlled-radio-buttons-group"
-    name="controlled-radio-buttons-group"
-    value={value}
-    onChange={handleChange}
-  >
-    <FormControlLabel value="hotel" control={<Radio />} label="Pay @ HOTEL" />
-    <FormControlLabel value="now" control={<Radio />} label="Pay now" />
-    <FormControlLabel value="wallet" control={<Radio />} label="Wallet" />
-  </RadioGroup>
-</FormControl>
-</div>
-    <div className='row justify-content-center'>
-      <div className='col-8'>
-        <button className='btn' onClick={BookingConfirmation}>Confirm Booking</button>
-      </div>
-       </div>
-       
     </CardContent>
-    </Card>
+  </Card>
    
     </div>
             </div>
     <Divider className='mt-4'></Divider>
-    
-
 </Drawer>   
 ))}
 

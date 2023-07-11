@@ -455,7 +455,7 @@ export default function Settings() {
     <Navbar/>
    
     <Box className="d-flex justify-content-center">
-    <Container maxWidth="lg" className="mb-4 mt-4" sx={{ paddingTop: '80px' }}>
+    <Container maxWidth="lg"  sx={{ paddingTop: '80px' }}>
         <TabContext value={value}>
     <TabList
       onChange={handleChange}
@@ -717,13 +717,13 @@ export default function Settings() {
     </TableContainer>
 
     </TabPanel>
-    <TabPanel value="2" className='ps-5 '  >
+    <TabPanel value="2" className='ps-5'>
         <h5>In Queue</h5>
       
         
     </TabPanel>
-    <TabPanel value="3" className='ps-5 ' >
-        <h5>In Queue</h5>
+    <TabPanel value="3" className='ps-5'>
+        <h5>Invited</h5>
     </TabPanel>
 </TabContext>
 
